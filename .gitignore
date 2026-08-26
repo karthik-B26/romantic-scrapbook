@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Content store — created automatically on first run, contains your live edits
+content-store.json
+
+# Environment
+.env
+.env.local
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel 🔑 — Birthday Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ── Admin gate gold override ──────────────────────────────────── */
+#adminGate { position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% -10%,rgba(255,255,255,.5),transparent 55%),linear-gradient(160deg,var(--parchment) 0%,var(--parchment-deep) 100%);transition:opacity 1.1s ease,filter 1.1s ease;overflow:hidden; }
+#adminGate.leaving{opacity:0;filter:blur(14px);pointer-events:none;}
+#adminGate .dot{border-color:var(--gold);}
+#adminGate .dot.filled{background:var(--gold);}
+#adminGate .gate-hint{color:var(--gold);}
+#adminGate .padlock path[fill="#c1435a"]{fill:var(--gold);}
+#adminGate .key:active{background:rgba(199,154,75,.15);}
+
+.admin-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),#e8b96a);color:#3a2a10;font-family:'Patrick Hand',cursive;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(199,154,75,.35);}
+
+/* ── Panel layout ───────────────────────────────────────────────── */
+#adminPanel{display:none;min-height:100vh;background:var(--parchment);}
+#adminPanel.show{display:block;}
+
+.admin-header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(244,234,217,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(199,154,75,.25);box-shadow:0 2px 20px rgba(74,54,40,.08);}
+.admin-header h1{font-family:'Caveat',cursive;font-size:1.9rem;background:linear-gradient(90deg,var(--rose),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;}
+.admin-header-actions{display:flex;gap:12px;align-items:center;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:30px;border:none;font-family:'Patrick Hand',cursive;font-size:.95rem;cursor:pointer;transition:transform .15s,box-shadow .15s;user-select:none;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(74,54,40,.18);}
+.btn:active{transform:translateY(0);box-shadow:none;}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-primary{background:linear-gradient(135deg,var(--rose),#a83550);color:#fff;box-shadow:0 4px 14px rgba(193,67,90,.35);}
+.btn-ghost{background:transparent;color:var(--ink-soft);border:1.5px solid rgba(74,54,40,.2);}
+.btn-danger{background:transparent;color:#b83b3b;border:1.5px solid rgba(184,59,59,.3);}
+
+.admin-body{max-width:860px;margin:0 auto;padding:40px 24px 120px;display:flex;flex-direction:column;gap:36px;}
+
+.admin-section{background:var(--paper);border-radius:4px;padding:28px 28px 24px;box-shadow:0 10px 30px rgba(74,54,40,.12);position:relative;}
+.admin-section::before{content:'';position:absolute;top:-11px;left:32px;width:80px;height:22px;background:repeating-linear-gradient(45deg,var(--rose-soft),var(--rose-soft) 6px,var(--rose-pale) 6px,var(--rose-pale) 12px);border-radius:2px;opacity:.85;}
+.admin-section.gold-tape::before{background:repeating-linear-gradient(45deg,rgba(199,154,75,.5),rgba(199,154,75,.5) 6px,rgba(199,154,75,.2) 6px,rgba(199,154,75,.2) 12px);}
+
+.section-title{font-family:'Caveat',cursive;font-size:1.6rem;color:var(--ink);margin-bottom:20px;padding-bottom:10px;border-bottom:1px dashed rgba(74,54,40,.15);}
+
+.field-group{margin-bottom:18px;}
+.field-group:last-child{margin-bottom:0;}
+label{display:block;font-family:'Patrick Hand',cursive;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
+input[type="text"],input[type="password"],textarea{width:100%;background:rgba(244,234,217,.6);border:1.5px solid rgba(74,54,40,.15);border-radius:6px;padding:10px 14px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);transition:border-color .2s,box-shadow .2s;outline:none;resize:vertical;}
+input[type="text"]:focus,input[type="password"]:focus,textarea:focus{border-color:var(--rose-soft);box-shadow:0 0 0 3px rgba(193,67,90,.1);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.field-row{grid-template-columns:1fr;}}
+
+/* ── Photo grid ─────────────────────────────────────────────────── */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;}
+.photo-slot{background:rgba(244,234,217,.6);border:1.5px dashed rgba(74,54,40,.2);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.photo-slot .slot-num{font-family:'Patrick Hand',cursive;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+.photo-preview{aspect-ratio:4/5;background:linear-gradient(135deg,var(--rose-pale),var(--rose-soft));border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:2rem;color:var(--ink-soft);}
+.photo-preview img{width:100%;height:100%;object-fit:cover;border-radius:4px;}
+.photo-slot input[type="text"]{font-size:.92rem;}
+.upload-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:transparent;border:1px solid rgba(74,54,40,.2);border-radius:6px;font-family:'Patrick Hand',cursive;font-size:.88rem;color:var(--ink-soft);cursor:pointer;transition:background .15s,color .15s;}
+.upload-btn:hover{background:var(--rose-pale);color:var(--rose);border-color:var(--rose-soft);}
+.photo-slot input[type="file"]{display:none;}
+.photo-clear{background:none;border:none;cursor:pointer;font-size:.8rem;color:#b83b3b;font-family:'Patrick Hand',cursive;text-align:center;padding:2px;opacity:0;transition:opacity .2s;}
+.photo-slot:hover .photo-clear{opacity:1;}
+
+/* ── Passcode ───────────────────────────────────────────────────── */
+.passcode-row{display:flex;gap:12px;align-items:flex-end;}
+.passcode-row .field-group{flex:1;margin:0;}
+.passcode-note{font-size:.85rem;color:var(--ink-soft);font-style:italic;margin-top:10px;line-height:1.5;}
+
+/* ── Saving indicator ───────────────────────────────────────────── */
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);font-family:'Patrick Hand',cursive;font-size:1rem;padding:12px 28px;border-radius:30px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:200;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.error{background:#b83b3b;}
+
+/* ── Save bar ───────────────────────────────────────────────────── */
+.save-bar{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;justify-content:center;gap:14px;padding:16px 24px;background:rgba(244,234,217,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(199,154,75,.2);box-shadow:0 -4px 24px rgba(74,54,40,.08);}
+
+/* ── Status dot ─────────────────────────────────────────────────── */
+.status-dot{width:8px;height:8px;border-radius:50%;background:#b83b3b;display:inline-block;margin-right:6px;transition:background .3s;}
+.status-dot.ok{background:#4caf50;}
+#serverStatus{font-family:'Patrick Hand',cursive;font-size:.82rem;color:var(--ink-soft);display:flex;align-items:center;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ ADMIN LOCK GATE ═══════════════════════ -->
+<div id="adminGate">
+  <div class="petal-field" id="gatePetals"></div>
+  <div class="sky-deco" id="skyDeco">
+    <div class="moon"></div>
+    <div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="cloud c3">☁️</div>
+    <div class="bloom-sprig s1">🌸</div><div class="bloom-sprig s2">🌷</div>
+    <div class="bloom-sprig s3">🌿</div><div class="bloom-sprig s4">🌼</div>
+    <div class="bloom-sprig s5">🌹</div><div class="bloom-sprig s6">🌹</div>
+  </div>
+  <div class="lock-card">
+    <svg class="padlock" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 6C36 6 26 16 26 30v10h-4c-3 0-5 2-5 5v38c0 3 2 5 5 5h56c3 0 5-2 5-5V45c0-3-2-5-5-5h-4V30c0-14-10-24-24-24zm0 8c10 0 16 7 16 16v10H34V30c0-9 6-16 16-16z" fill="#c1435a"/>
+      <circle cx="50" cy="60" r="7" fill="#fbf5e8"/>
+      <rect x="47" y="60" width="6" height="14" rx="3" fill="#fbf5e8"/>
+      <circle cx="78" cy="34" r="6" fill="none" stroke="#c79a4b" stroke-width="3"/>
+      <rect x="82" y="38" width="14" height="4" rx="2" fill="#c79a4b" transform="rotate(35 82 38)"/>
+    </svg>
+    <div class="admin-badge">Admin Access</div>
+    <div class="dedication">
+      <div class="names hand" style="font-size:1.1rem;color:var(--ink-soft);">Enter admin passcode</div>
+    </div>
+    <div class="dots" id="adminDots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="keypad" id="adminKeypad">
+      <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+      <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+      <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+      <div></div><button class="key" data-k="0">0</button><button class="key wide" data-k="back">⌫</button>
+    </div>
+    <div class="gate-hint" id="adminHint">incorrect admin passcode 🔑</div>
+    <div style="margin-top:18px;">
+      <a href="index.html" style="font-family:'Patrick Hand',cursive;font-size:.85rem;color:var(--ink-soft);text-decoration:none;opacity:.7;">← Back to site</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ ADMIN PANEL ══════════════════════════ -->
+<div id="adminPanel">
+  <header class="admin-header">
+    <h1>🔑 Admin Panel</h1>
+    <div class="admin-header-actions">
+      <span id="serverStatus"><span class="status-dot" id="statusDot"></span>Server</span>
+      <a href="index.html" class="btn btn-ghost" style="text-decoration:none;">← View Site</a>
+      <button class="btn btn-danger" id="btnReset">↺ Reset</button>
+      <button class="btn btn-primary" id="btnSave">💾 Save</button>
+    </div>
+  </header>
+
+  <main class="admin-body">
+
+    <!-- Lock Screen -->
+    <div class="admin-section">
+      <div class="section-title">🔒 Lock Screen</div>
+      <div class="field-row">
+        <div class="field-group"><label for="f-lockFrom">Sender line ("From, …")</label><input type="text" id="f-lockFrom"></div>
+        <div class="field-group"><label for="f-lockTo">Recipient line ("For …")</label><input type="text" id="f-lockTo"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label for="f-hintText">Wrong PIN hint</label><input type="text" id="f-hintText"></div>
+        <div class="field-group"><label for="f-bloomText">Bloom transition text</label><input type="text" id="f-bloomText"></div>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="admin-section">
+      <div class="section-title">✨ Board Hero</div>
+      <div class="field-row">
+        <div class="field-group"><label for="f-heroLabel">Small label</label><input type="text" id="f-heroLabel"></div>
+        <div class="field-group"><label for="f-heroHeadline">Big headline</label><input type="text" id="f-heroHeadline"></div>
+      </div>
+      <div class="field-group"><label for="f-heroSubtitle">Subtitle paragraph</label><textarea id="f-heroSubtitle" rows="2"></textarea></div>
+    </div>
+
+    <!-- Photos -->
+    <div class="admin-section gold-tape">
+      <div class="section-title">📸 Photos (10 Slots)</div>
+      <p style="font-family:'Patrick Hand',cursive;font-size:.88rem;color:var(--ink-soft);margin-bottom:20px;line-height:1.5;">
+        Upload a file <em>or</em> paste a URL (Imgur, Google Photos, etc.).
+        For shared hosting, URLs are recommended over uploads to keep the DB small.
+      </p>
+      <div class="photo-grid" id="photoGrid"></div>
+    </div>
+
+    <!-- Note Cards -->
+    <div class="admin-section">
+      <div class="section-title">📖 Note Cards</div>
+      <div class="field-group"><label for="f-loveDef">Definition of "Love"</label><textarea id="f-loveDef" rows="3"></textarea></div>
+      <div class="field-group"><label for="f-usDef">Definition of "Us"</label><textarea id="f-usDef" rows="3"></textarea></div>
+    </div>
+
+    <!-- Message Card -->
+    <div class="admin-section">
+      <div class="section-title">💌 Message Card</div>
+      <div class="field-group"><label for="f-msgCard">Handwritten message</label><textarea id="f-msgCard" rows="4"></textarea></div>
+    </div>
+
+    <!-- Quote Tags -->
+    <div class="admin-section">
+      <div class="section-title">🏷️ Quote Tags</div>
+      <div class="field-group"><label for="f-quote1">Quote 1</label><input type="text" id="f-quote1"></div>
+      <div class="field-group"><label for="f-quote2">Quote 2</label><input type="text" id="f-quote2"></div>
+    </div>
+
+    <!-- Pink Tags -->
+    <div class="admin-section">
+      <div class="section-title">🌸 Pink Tags</div>
+      <div class="field-row">
+        <div class="field-group"><label for="f-pinkTag1">Pink tag 1</label><input type="text" id="f-pinkTag1"></div>
+        <div class="field-group"><label for="f-pinkTag2">Pink tag 2</label><input type="text" id="f-pinkTag2"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label for="f-pinkTag3">Pink tag 3 (main)</label><input type="text" id="f-pinkTag3"></div>
+        <div class="field-group"><label for="f-pinkTag3Sub">Pink tag 3 (sub)</label><input type="text" id="f-pinkTag3Sub"></div>
+      </div>
+    </div>
+
+    <!-- Finale -->
+    <div class="admin-section">
+      <div class="section-title">🌹 Finale</div>
+      <div class="field-row">
+        <div class="field-group"><label for="f-finaleLabel">Small label</label><input type="text" id="f-finaleLabel"></div>
+        <div class="field-group"><label for="f-finaleHeadline">Headline</label><input type="text" id="f-finaleHeadline"></div>
+      </div>
+      <div class="field-group"><label for="f-finaleMsg">Closing message</label><textarea id="f-finaleMsg" rows="4"></textarea></div>
+    </div>
+
+    <!-- Passcode -->
+    <div class="admin-section gold-tape">
+      <div class="section-title">🔑 Visitor Passcode</div>
+      <div class="passcode-row">
+        <div class="field-group"><label for="f-userPass">4-digit PIN for your girlfriend</label><input type="password" id="f-userPass" maxlength="4" pattern="\d{4}" autocomplete="off"></div>
+        <button class="btn btn-ghost" id="btnTogglePass" type="button">👁 Show</button>
+      </div>
+      <p class="passcode-note">The <strong>Admin PIN (1234)</strong> is fixed and cannot be changed here.</p>
+    </div>
+
+  </main>
+
+  <div class="save-bar">
+    <button class="btn btn-danger" id="btnReset2">↺ Reset to Defaults</button>
+    <button class="btn btn-primary" id="btnSave2" style="padding:12px 36px;font-size:1.05rem;">💾 Save All Changes</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(async function () {
+  'use strict';
+
+  const ADMIN_KEY = '1234';
+
+  // ── Decorations ──────────────────────────────────────────────────
+  var sky = document.getElementById('skyDeco');
+  for (var i = 0; i < 10; i++) {
+    var sp = document.createElement('div'); sp.className = 'sparkle';
+    sp.style.top = (Math.random()*90)+'%'; sp.style.left = (Math.random()*90)+'%';
+    sp.style.animationDelay = (Math.random()*2.4)+'s'; sky.appendChild(sp);
+  }
+  var gp = document.getElementById('gatePetals');
+  for (var j = 0; j < 18; j++) {
+    var p = document.createElement('div'); p.className = 'petal';
+    if (Math.random()<.35){p.textContent='🌹';p.style.background='none';p.style.fontSize=(14+Math.random()*10)+'px';p.style.borderRadius='0';}
+    p.style.left=Math.random()*100+'%'; p.style.setProperty('--drift',(Math.random()*80-40)+'px');
+    p.style.animationDuration=(8+Math.random()*9)+'s'; p.style.animationDelay=(Math.random()*10)+'s';
+    p.style.opacity=0.35+Math.random()*0.45; gp.appendChild(p);
+  }
+
+  // ── Admin gate keypad ────────────────────────────────────────────
+  var adminGate  = document.getElementById('adminGate');
+  var adminPanel = document.getElementById('adminPanel');
+  var adminDots  = document.getElementById('adminDots');
+  var adminHint  = document.getElementById('adminHint');
+  var enteredA   = '';
+
+  function renderGateDots() {
+    Array.from(adminDots.children).forEach(function(d,i){d.classList.toggle('filled',i<enteredA.length);});
+  }
+  function wrongGatePin() {
+    adminDots.classList.remove('shake'); void adminDots.offsetWidth; adminDots.classList.add('shake');
+    adminHint.classList.add('show');
+    setTimeout(function(){ enteredA=''; renderGateDots(); }, 350);
+  }
+  document.getElementById('adminKeypad').addEventListener('click', function(e) {
+    var btn = e.target.closest('.key'); if (!btn) return;
+    var k = btn.dataset.k;
+    if (k==='back'){enteredA=enteredA.slice(0,-1);renderGateDots();return;}
+    if (enteredA.length>=4) return;
+    enteredA+=k; renderGateDots();
+    if (enteredA.length===4) {
+      setTimeout(function(){
+        if (enteredA===ADMIN_KEY) {
+          sessionStorage.setItem('adminAuth','1');
+          adminGate.classList.add('leaving');
+          setTimeout(showPanel, 900);
+        } else { wrongGatePin(); }
+      }, 150);
+    }
+  });
+
+  // ── Show panel ───────────────────────────────────────────────────
+  async function showPanel() {
+    adminGate.style.display = 'none';
+    adminPanel.classList.add('show');
+    await loadFormValues();
+  }
+
+  // Auto-open if already authenticated from index.html
+  if (sessionStorage.getItem('adminAuth') === '1') {
+    await showPanel();
+  }
+
+  // ── Server status check ──────────────────────────────────────────
+  async function checkServer() {
+    try {
+      var r = await fetch('/api/content', { method: 'HEAD' });
+      document.getElementById('statusDot').classList.toggle('ok', r.ok);
+    } catch(e) {
+      document.getElementById('statusDot').classList.remove('ok');
+    }
+  }
+
+  // ── API helpers ──────────────────────────────────────────────────
+  async function apiGet() {
+    var res = await fetch('/api/content');
+    if (!res.ok) throw new Error('GET failed: HTTP ' + res.status);
+    return res.json();
+  }
+
+  async function apiSave(data) {
+    var res = await fetch('/api/content', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_KEY },
+      body:    JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Save failed: HTTP ' + res.status);
+    return res.json();
+  }
+
+  async function apiReset() {
+    var res = await fetch('/api/reset', {
+      method:  'POST',
+      headers: { 'X-Admin-Key': ADMIN_KEY }
+    });
+    if (!res.ok) throw new Error('Reset failed: HTTP ' + res.status);
+    return res.json();
+  }
+
+  // ── Photo grid builder ───────────────────────────────────────────
+  function buildPhotoGrid(photos) {
+    var grid = document.getElementById('photoGrid');
+    grid.innerHTML = '';
+    photos.forEach(function(photo, i) {
+      var slot = document.createElement('div');
+      slot.className = 'photo-slot';
+      slot.innerHTML =
+        '<div class="slot-num">Photo '+(i+1)+'</div>'+
+        '<div class="photo-preview" id="prev-'+i+'">'+(photo.url?'<img src="'+esc(photo.url)+'" alt="photo '+(i+1)+'">':'🌸')+'</div>'+
+        '<input type="text" id="photo-url-'+i+'" placeholder="Paste image URL…" value="'+esc(photo.url)+'">'+
+        '<label class="upload-btn" for="photo-file-'+i+'">📁 Upload image</label>'+
+        '<input type="file" id="photo-file-'+i+'" accept="image/*">'+
+        '<input type="text" id="photo-cap-'+i+'" placeholder="Caption…" value="'+esc(photo.caption)+'">'+
+        '<button class="photo-clear" data-slot="'+i+'">✕ Clear photo</button>';
+      grid.appendChild(slot);
+
+      document.getElementById('photo-url-'+i).addEventListener('input', function(){ updatePrev(i, this.value); });
+      document.getElementById('photo-file-'+i).addEventListener('change', function() {
+        var file = this.files[0]; if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          document.getElementById('photo-url-'+i).value = ev.target.result;
+          updatePrev(i, ev.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+      slot.querySelector('.photo-clear').addEventListener('click', function() {
+        var idx = parseInt(this.dataset.slot);
+        document.getElementById('photo-url-'+idx).value = '';
+        updatePrev(idx, '');
+      });
+    });
+  }
+
+  function updatePrev(i, url) {
+    var el = document.getElementById('prev-'+i);
+    el.innerHTML = url ? '<img src="'+esc(url)+'" alt="preview">' : '🌸';
+  }
+  function esc(s){ return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+  // ── Populate form from API ───────────────────────────────────────
+  async function loadFormValues() {
+    var c = await apiGet();
+    document.getElementById('f-lockFrom').value       = c.lockFrom       || '';
+    document.getElementById('f-lockTo').value         = c.lockTo         || '';
+    document.getElementById('f-hintText').value       = c.hintText       || '';
+    document.getElementById('f-bloomText').value      = c.bloomText      || '';
+    document.getElementById('f-heroLabel').value      = c.heroLabel      || '';
+    document.getElementById('f-heroHeadline').value   = c.heroHeadline   || '';
+    document.getElementById('f-heroSubtitle').value   = c.heroSubtitle   || '';
+    document.getElementById('f-loveDef').value        = c.loveDef        || '';
+    document.getElementById('f-usDef').value          = c.usDef          || '';
+    document.getElementById('f-msgCard').value        = c.messageCard    || '';
+    document.getElementById('f-quote1').value         = c.quote1         || '';
+    document.getElementById('f-quote2').value         = c.quote2         || '';
+    document.getElementById('f-pinkTag1').value       = c.pinkTag1       || '';
+    document.getElementById('f-pinkTag2').value       = c.pinkTag2       || '';
+    document.getElementById('f-pinkTag3').value       = c.pinkTag3       || '';
+    document.getElementById('f-pinkTag3Sub').value    = c.pinkTag3Sub    || '';
+    document.getElementById('f-finaleLabel').value    = c.finaleLabel    || '';
+    document.getElementById('f-finaleHeadline').value = c.finaleHeadline || '';
+    document.getElementById('f-finaleMsg').value      = c.finaleMessage  || '';
+    document.getElementById('f-userPass').value       = c.userPasscode   || '';
+    buildPhotoGrid(c.photos || []);
+    checkServer();
+  }
+
+  // ── Collect form → object ────────────────────────────────────────
+  function collectValues() {
+    var photos = [];
+    for (var i = 0; i < 10; i++) {
+      photos.push({
+        url:     (document.getElementById('photo-url-'+i)||{}).value || '',
+        caption: (document.getElementById('photo-cap-'+i)||{}).value || ''
+      });
+    }
+    var newPass = document.getElementById('f-userPass').value.trim();
+    return {
+      lockFrom:      document.getElementById('f-lockFrom').value.trim(),
+      lockTo:        document.getElementById('f-lockTo').value.trim(),
+      hintText:      document.getElementById('f-hintText').value.trim(),
+      bloomText:     document.getElementById('f-bloomText').value.trim(),
+      heroLabel:     document.getElementById('f-heroLabel').value.trim(),
+      heroHeadline:  document.getElementById('f-heroHeadline').value.trim(),
+      heroSubtitle:  document.getElementById('f-heroSubtitle').value.trim(),
+      loveDef:       document.getElementById('f-loveDef').value.trim(),
+      usDef:         document.getElementById('f-usDef').value.trim(),
+      messageCard:   document.getElementById('f-msgCard').value.trim(),
+      quote1:        document.getElementById('f-quote1').value.trim(),
+      quote2:        document.getElementById('f-quote2').value.trim(),
+      pinkTag1:      document.getElementById('f-pinkTag1').value.trim(),
+      pinkTag2:      document.getElementById('f-pinkTag2').value.trim(),
+      pinkTag3:      document.getElementById('f-pinkTag3').value.trim(),
+      pinkTag3Sub:   document.getElementById('f-pinkTag3Sub').value.trim(),
+      finaleLabel:   document.getElementById('f-finaleLabel').value.trim(),
+      finaleHeadline:document.getElementById('f-finaleHeadline').value.trim(),
+      finaleMessage: document.getElementById('f-finaleMsg').value.trim(),
+      userPasscode:  /^\d{4}$/.test(newPass) && newPass !== ADMIN_KEY ? newPass : '2808',
+      photos:        photos
+    };
+  }
+
+  // ── Save ─────────────────────────────────────────────────────────
+  async function doSave() {
+    var btns = [document.getElementById('btnSave'), document.getElementById('btnSave2')];
+    btns.forEach(function(b){ b.disabled=true; b.textContent='Saving…'; });
+    try {
+      await apiSave(collectValues());
+      showToast('Saved! She\'ll see it now 🌹', false);
+    } catch(err) {
+      showToast('Error: ' + err.message, true);
+    } finally {
+      btns[0].disabled=false; btns[0].innerHTML='💾 Save';
+      btns[1].disabled=false; btns[1].innerHTML='💾 Save All Changes';
+    }
+  }
+
+  // ── Reset ─────────────────────────────────────────────────────────
+  async function doReset() {
+    if (!confirm('Reset ALL content to defaults? This cannot be undone.')) return;
+    try {
+      await apiReset();
+      await loadFormValues();
+      showToast('Reset to defaults ↺', false);
+    } catch(err) {
+      showToast('Error: ' + err.message, true);
+    }
+  }
+
+  // ── Wire buttons ──────────────────────────────────────────────────
+  document.getElementById('btnSave').addEventListener('click',   doSave);
+  document.getElementById('btnSave2').addEventListener('click',  doSave);
+  document.getElementById('btnReset').addEventListener('click',  doReset);
+  document.getElementById('btnReset2').addEventListener('click', doReset);
+
+  document.getElementById('btnTogglePass').addEventListener('click', function() {
+    var inp = document.getElementById('f-userPass');
+    if (inp.type==='password'){inp.type='text';this.textContent='🙈 Hide';}
+    else{inp.type='password';this.textContent='👁 Show';}
+  });
+
+  document.getElementById('f-userPass').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'').slice(0,4);
+    this.style.borderColor = this.value===ADMIN_KEY ? '#b83b3b' : '';
+  });
+
+  // ── Toast helper ──────────────────────────────────────────────────
+  var toastTimer;
+  function showToast(msg, isError) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.toggle('error', !!isError);
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
+  }
+
+})();
+</script>
+</body>
+</html>
