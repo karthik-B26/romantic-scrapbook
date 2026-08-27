@@ -3,174 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel 🔑 — Birthday Site</title>
+<title>Admin Panel — Birthday Scrapbook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="content.js"></script>
 <style>
-/* ── Admin-only overrides ──────────────────────────────────────── */
-
-/* Gate: gold theme instead of rose */
-#adminGate {
-  position: fixed; inset: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: center;
-  background:
-    radial-gradient(ellipse at 50% -10%, rgba(255,255,255,.5), transparent 55%),
-    linear-gradient(160deg, var(--parchment) 0%, var(--parchment-deep) 100%);
-  transition: opacity 1.1s ease, filter 1.1s ease;
-  overflow: hidden;
+/* ── Admin-specific styles ──────────────────────────────────────── */
+.admin-gate {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  background: var(--burgundy-950, #200A08);
+  background-image: radial-gradient(ellipse at 50% 40%, rgba(61,21,18,0.18) 0%, transparent 60%);
+  transition: opacity 0.8s ease, filter 0.8s ease;
 }
-#adminGate.leaving { opacity: 0; filter: blur(14px); pointer-events: none; }
-#adminGate .dot    { border-color: var(--gold); }
-#adminGate .dot.filled { background: var(--gold); }
-#adminGate .gate-hint  { color: var(--gold); }
-#adminGate .padlock path[fill="#c1435a"] { fill: var(--gold); }
-#adminGate .key:active { background: rgba(199,154,75,.15); }
-
-.admin-badge {
+.admin-gate--leaving { opacity: 0; filter: blur(14px); pointer-events: none; }
+.admin-gate__badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--gold), #e8b96a);
-  color: #3a2a10;
-  font-family: 'Patrick Hand', cursive;
-  font-size: .75rem;
-  letter-spacing: .12em;
+  background: linear-gradient(135deg, #E8C27A, #C9973B);
+  color: #3A322C;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  padding: 4px 14px;
-  border-radius: 20px;
-  margin-bottom: 14px;
-  box-shadow: 0 2px 10px rgba(199,154,75,.35);
+  padding: 5px 16px;
+  border-radius: 999px;
+  margin-bottom: 24px;
 }
+.admin-gate__label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #C9B8A8;
+  margin-bottom: 28px;
+}
+.admin-gate .pin__hearts { margin-bottom: 16px; }
+.admin-gate .pin__heart-indicator { color: #E8C27A; }
+.admin-gate .pin__heart-indicator--filled path { fill: #E8C27A !important; }
+.admin-gate .pin__key { color: #E8C27A; }
+.admin-gate .pin__key--pressed { color: #F3E9DA; }
+.admin-gate .pin__hint { color: #E8C27A; }
+.admin-gate__back {
+  margin-top: 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #C9B8A8;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.admin-gate__back:hover { opacity: 1; }
 
-/* ── Admin Panel Layout ─────────────────────────────────────────── */
-#adminPanel {
-  display: none;
-  min-height: 100vh;
-  background: var(--parchment);
-}
-#adminPanel.show { display: block; }
+/* ── Admin Panel ────────────────────────────────────────────────── */
+.admin-panel { display: none; min-height: 100vh; background: var(--ivory-bg, #FAF3E8); }
+.admin-panel.show { display: block; }
 
 .admin-header {
   position: sticky; top: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 28px;
-  background: rgba(244,234,217,.92);
+  background: rgba(250,243,232,0.92);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(199,154,75,.25);
-  box-shadow: 0 2px 20px rgba(74,54,40,.08);
+  border-bottom: 1px solid rgba(201,151,59,0.2);
+  box-shadow: 0 2px 20px rgba(58,50,44,0.06);
 }
-.admin-header h1 {
-  font-family: 'Caveat', cursive;
-  font-size: 1.9rem;
-  background: linear-gradient(90deg, var(--rose), var(--gold));
+.admin-header__title {
+  font-family: 'Pacifico', cursive;
+  font-size: 1.5rem;
+  background: linear-gradient(100deg, #8B2635, #C9973B, #E8C27A);
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  line-height: 1;
 }
-.admin-header-actions { display: flex; gap: 12px; align-items: center; }
+.admin-header__actions { display: flex; gap: 10px; align-items: center; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 20px; border-radius: 30px; border: none;
-  font-family: 'Patrick Hand', cursive; font-size: .95rem;
-  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease;
-  user-select: none;
+  padding: 8px 18px; border-radius: 999px; border: none;
+  font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
 }
-.btn:hover   { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(74,54,40,.18); }
-.btn:active  { transform: translateY(0);    box-shadow: none; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(58,50,44,0.15); }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: linear-gradient(135deg, #7A2130, #9A3545); color: #F3E9DA; }
+.btn-gold { background: linear-gradient(135deg, #C9973B, #E8C27A); color: #3A322C; }
+.btn-ghost { background: transparent; color: #7A6B5F; border: 1.5px solid rgba(58,50,44,0.2); }
+.btn-danger { background: transparent; color: #9A3545; border: 1.5px solid rgba(122,33,48,0.3); }
 
-.btn-primary {
-  background: linear-gradient(135deg, var(--rose), #a83550);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(193,67,90,.35);
-}
-.btn-gold {
-  background: linear-gradient(135deg, var(--gold), #b5882e);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(199,154,75,.35);
-}
-.btn-ghost {
-  background: transparent;
-  color: var(--ink-soft);
-  border: 1.5px solid rgba(74,54,40,.2);
-}
-.btn-danger {
-  background: transparent;
-  color: #b83b3b;
-  border: 1.5px solid rgba(184,59,59,.3);
-}
-
-/* ── Sections & Cards ──────────────────────────────────────────── */
 .admin-body {
   max-width: 860px;
   margin: 0 auto;
-  padding: 40px 24px 100px;
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
+  padding: 36px 24px 120px;
+  display: flex; flex-direction: column; gap: 32px;
 }
 
 .admin-section {
-  background: var(--paper);
-  border-radius: 4px;
-  padding: 28px 28px 24px;
-  box-shadow: 0 10px 30px rgba(74,54,40,.12);
+  background: var(--card-white, #FDFBF7);
+  border-radius: 10px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(58,30,20,0.08);
   position: relative;
 }
-/* Washi tape header accent */
 .admin-section::before {
   content: '';
-  position: absolute; top: -11px; left: 32px;
-  width: 80px; height: 22px;
-  background: repeating-linear-gradient(45deg, var(--rose-soft), var(--rose-soft) 6px, var(--rose-pale) 6px, var(--rose-pale) 12px);
-  border-radius: 2px; opacity: .85;
+  position: absolute; top: -10px; left: 28px;
+  width: 70px; height: 18px;
+  background: repeating-linear-gradient(45deg, #E8B4B8, #E8B4B8 5px, transparent 5px, transparent 10px);
+  border-radius: 2px; opacity: 0.75;
+  transform: rotate(-2deg);
 }
 .admin-section.gold-tape::before {
-  background: repeating-linear-gradient(45deg, rgba(199,154,75,.5), rgba(199,154,75,.5) 6px, rgba(199,154,75,.2) 6px, rgba(199,154,75,.2) 12px);
+  background: repeating-linear-gradient(45deg, rgba(201,151,59,0.4), rgba(201,151,59,0.4) 5px, transparent 5px, transparent 10px);
 }
 
 .section-title {
   font-family: 'Caveat', cursive;
-  font-size: 1.6rem;
-  color: var(--ink);
+  font-size: 1.5rem;
+  color: #3A322C;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 1px dashed rgba(74,54,40,.15);
+  border-bottom: 1px dashed rgba(58,50,44,0.12);
 }
 
-/* ── Form Fields ───────────────────────────────────────────────── */
-.field-group { margin-bottom: 18px; }
+.field-group { margin-bottom: 16px; }
 .field-group:last-child { margin-bottom: 0; }
 
-label {
+.field-group label {
   display: block;
-  font-family: 'Patrick Hand', cursive;
-  font-size: .82rem;
-  letter-spacing: .08em;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: #7A6B5F;
   margin-bottom: 6px;
 }
 
-input[type="text"],
-input[type="password"],
-textarea {
+.field-group input[type="text"],
+.field-group input[type="password"],
+.field-group textarea {
   width: 100%;
-  background: rgba(244,234,217,.6);
-  border: 1.5px solid rgba(74,54,40,.15);
-  border-radius: 6px;
+  background: rgba(250,243,232,0.6);
+  border: 1.5px solid rgba(58,50,44,0.12);
+  border-radius: 8px;
   padding: 10px 14px;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.05rem;
-  color: var(--ink);
-  transition: border-color .2s ease, box-shadow .2s ease;
+  color: #3A322C;
+  transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
   resize: vertical;
 }
-input[type="text"]:focus,
-input[type="password"]:focus,
-textarea:focus {
-  border-color: var(--rose-soft);
-  box-shadow: 0 0 0 3px rgba(193,67,90,.1);
+.field-group input:focus,
+.field-group textarea:focus {
+  border-color: #D9A9A0;
+  box-shadow: 0 0 0 3px rgba(217,169,160,0.15);
 }
 
 .field-row {
@@ -180,209 +168,229 @@ textarea:focus {
 }
 @media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
 
-/* ── Photo Grid ────────────────────────────────────────────────── */
+/* Photo grid */
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
-
 .photo-slot {
-  background: rgba(244,234,217,.6);
-  border: 1.5px dashed rgba(74,54,40,.2);
-  border-radius: 6px;
+  background: rgba(250,243,232,0.5);
+  border: 1.5px dashed rgba(58,50,44,0.15);
+  border-radius: 8px;
   padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: flex; flex-direction: column; gap: 8px;
 }
-.photo-slot .slot-num {
-  font-family: 'Patrick Hand', cursive;
-  font-size: .78rem;
-  letter-spacing: .1em;
+.photo-slot .slot-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: #7A6B5F;
 }
 .photo-preview {
   aspect-ratio: 4/5;
-  background: linear-gradient(135deg, var(--rose-pale), var(--rose-soft));
-  border-radius: 4px;
+  background: linear-gradient(135deg, #E3C9CB, #E8B4B8);
+  border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  font-size: 2rem;
-  color: var(--ink-soft);
   position: relative;
 }
 .photo-preview img {
   width: 100%; height: 100%; object-fit: cover;
-  border-radius: 4px;
-}
-.photo-slot input[type="text"] { font-size: .92rem; }
-.photo-slot .upload-btn {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 8px;
-  background: transparent;
-  border: 1px solid rgba(74,54,40,.2);
   border-radius: 6px;
-  font-family: 'Patrick Hand', cursive;
-  font-size: .88rem;
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease;
 }
-.photo-slot .upload-btn:hover { background: var(--rose-pale); color: var(--rose); border-color: var(--rose-soft); }
-.photo-slot input[type="file"] { display: none; }
-.photo-clear {
-  background: none; border: none; cursor: pointer;
-  font-size: .8rem; color: #b83b3b;
-  font-family: 'Patrick Hand', cursive;
-  text-align: center; padding: 2px;
-  opacity: 0; transition: opacity .2s;
+.photo-preview__empty {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: #7A6B5F;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
 }
-.photo-slot:hover .photo-clear { opacity: 1; }
+.photo-preview__empty svg { width: 28px; height: 28px; }
 
-/* ── Passcode section ──────────────────────────────────────────── */
+.upload-label {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 7px;
+  background: transparent;
+  border: 1px solid rgba(58,50,44,0.15);
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #7A6B5F;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.upload-label:hover { background: #E3C9CB; color: #7A2130; }
+.photo-slot input[type="file"] { display: none; }
+.photo-slot input[type="text"] {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+}
+.photo-clear-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 0.75rem; color: #9A3545;
+  font-family: 'Inter', sans-serif;
+  text-align: center; padding: 2px;
+  opacity: 0; transition: opacity 0.2s;
+}
+.photo-slot:hover .photo-clear-btn { opacity: 1; }
+
+/* Badges editor */
+.badges-editor {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+}
+.badge-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  background: var(--ivory-bg, #FAF3E8);
+  border: 1px solid rgba(58,50,44,0.12);
+  border-radius: 999px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  color: #3A322C;
+}
+.badge-pill__remove {
+  background: none; border: none; cursor: pointer;
+  color: #9A3545; font-size: 0.8rem;
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+}
+.badge-add-row {
+  display: flex; gap: 8px; align-items: center;
+}
+.badge-add-row input {
+  flex: 1;
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+}
+.badge-add-row .btn { padding: 6px 14px; font-size: 0.8rem; }
+
+/* Passcode section */
 .passcode-row { display: flex; gap: 12px; align-items: flex-end; }
 .passcode-row .field-group { flex: 1; margin: 0; }
 .passcode-note {
-  font-size: .85rem;
-  color: var(--ink-soft);
+  font-family: 'Cormorant Garamond', serif;
   font-style: italic;
+  font-size: 0.9rem;
+  color: #7A6B5F;
   margin-top: 10px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* ── Toast ─────────────────────────────────────────────────────── */
-#toast {
-  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--ink); color: var(--paper);
-  font-family: 'Patrick Hand', cursive; font-size: 1rem;
-  padding: 12px 28px; border-radius: 30px;
+/* Toast */
+.admin-toast {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #3A322C; color: #F3E9DA;
+  font-family: 'Inter', sans-serif; font-size: 0.9rem;
+  padding: 12px 28px; border-radius: 999px;
   opacity: 0; pointer-events: none;
-  transition: opacity .3s ease, transform .3s ease;
+  transition: opacity 0.3s, transform 0.3s;
   z-index: 200;
   white-space: nowrap;
 }
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Sticky save bar ───────────────────────────────────────────── */
+/* Save bar */
 .save-bar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
   display: flex; justify-content: center; gap: 14px;
-  padding: 16px 24px;
-  background: rgba(244,234,217,.96);
+  padding: 14px 24px;
+  background: rgba(250,243,232,0.95);
   backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(199,154,75,.2);
-  box-shadow: 0 -4px 24px rgba(74,54,40,.08);
+  border-top: 1px solid rgba(201,151,59,0.15);
+  box-shadow: 0 -4px 20px rgba(58,50,44,0.06);
 }
 </style>
 </head>
-<body>
+<body class="body--light">
 
 <!-- ═══════════════════════════════════════════════════════════════
-     ADMIN LOCK GATE  (shown when not yet authenticated)
+     ADMIN LOCK GATE
 ═══════════════════════════════════════════════════════════════════ -->
-<div id="adminGate">
-  <div class="petal-field" id="gatePetals"></div>
-  <div class="sky-deco" id="skyDeco">
-    <div class="moon"></div>
-    <div class="cloud c1">☁️</div>
-    <div class="cloud c2">☁️</div>
-    <div class="cloud c3">☁️</div>
-    <div class="bloom-sprig s1">🌸</div>
-    <div class="bloom-sprig s2">🌷</div>
-    <div class="bloom-sprig s3">🌿</div>
-    <div class="bloom-sprig s4">🌼</div>
-    <div class="bloom-sprig s5">🌹</div>
-    <div class="bloom-sprig s6">🌹</div>
+<div id="adminGate" class="admin-gate">
+  <div class="admin-gate__badge">Admin Access</div>
+  <p class="admin-gate__label">Enter admin passcode</p>
+
+  <!-- Heart digit indicators -->
+  <div class="pin__hearts" id="adminDots">
+    <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
   </div>
 
-  <div class="lock-card">
-    <svg class="padlock" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50 6C36 6 26 16 26 30v10h-4c-3 0-5 2-5 5v38c0 3 2 5 5 5h56c3 0 5-2 5-5V45c0-3-2-5-5-5h-4V30c0-14-10-24-24-24zm0 8c10 0 16 7 16 16v10H34V30c0-9 6-16 16-16z" fill="#c79a4b"/>
-      <circle cx="50" cy="60" r="7" fill="#fbf5e8"/>
-      <rect x="47" y="60" width="6" height="14" rx="3" fill="#fbf5e8"/>
-      <circle cx="78" cy="34" r="6" fill="none" stroke="#c79a4b" stroke-width="3"/>
-      <rect x="82" y="38" width="14" height="4" rx="2" fill="#c79a4b" transform="rotate(35 82 38)"/>
-    </svg>
+  <div class="pin__divider" style="width:200px;margin-bottom:20px;"></div>
 
-    <div class="admin-badge">Admin Access</div>
-
-    <div class="dedication">
-      <div class="names hand" style="font-size:1.1rem;color:var(--ink-soft);">Enter admin passcode</div>
-    </div>
-
-    <div class="dots" id="adminDots">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-
-    <div class="keypad" id="adminKeypad">
-      <button class="key" data-k="1">1</button>
-      <button class="key" data-k="2">2</button>
-      <button class="key" data-k="3">3</button>
-      <button class="key" data-k="4">4</button>
-      <button class="key" data-k="5">5</button>
-      <button class="key" data-k="6">6</button>
-      <button class="key" data-k="7">7</button>
-      <button class="key" data-k="8">8</button>
-      <button class="key" data-k="9">9</button>
-      <div></div>
-      <button class="key" data-k="0">0</button>
-      <button class="key wide" data-k="back">⌫</button>
-    </div>
-
-    <div class="gate-hint" id="adminHint">incorrect admin passcode 🔑</div>
-    <div style="margin-top:18px;">
-      <a href="index.html" style="font-family:'Patrick Hand',cursive;font-size:.85rem;color:var(--ink-soft);text-decoration:none;opacity:.7;">← Back to site</a>
-    </div>
+  <!-- Heart keypad -->
+  <div class="pin__keypad" id="adminKeypad">
+    <button class="pin__key" data-k="1"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">1</span></button>
+    <button class="pin__key" data-k="2"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">2</span></button>
+    <button class="pin__key" data-k="3"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">3</span></button>
+    <button class="pin__key" data-k="4"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">4</span></button>
+    <button class="pin__key" data-k="5"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">5</span></button>
+    <button class="pin__key" data-k="6"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">6</span></button>
+    <button class="pin__key" data-k="7"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">7</span></button>
+    <button class="pin__key" data-k="8"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">8</span></button>
+    <button class="pin__key" data-k="9"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">9</span></button>
+    <div class="pin__key-spacer"></div>
+    <button class="pin__key" data-k="0"><svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span class="pin__key-num">0</span></button>
+    <button class="pin__key pin__key--del" data-k="back"><span class="pin__del-text">DEL</span></button>
   </div>
+
+  <p class="pin__hint" id="adminHint">incorrect admin passcode</p>
+  <a href="index.html" class="admin-gate__back">← Back to site</a>
 </div>
-
 
 <!-- ═══════════════════════════════════════════════════════════════
      ADMIN PANEL
 ═══════════════════════════════════════════════════════════════════ -->
-<div id="adminPanel">
+<div id="adminPanel" class="admin-panel">
 
   <header class="admin-header">
-    <h1>🔑 Admin Panel</h1>
-    <div class="admin-header-actions">
-      <a href="index.html" class="btn btn-ghost" style="text-decoration:none;">← View Site</a>
-      <button class="btn btn-danger" id="btnReset" title="Reset all content to defaults">↺ Reset</button>
-      <button class="btn btn-primary" id="btnSave">💾 Save Changes</button>
+    <div class="admin-header__title">Admin Panel</div>
+    <div class="admin-header__actions">
+      <a href="index.html" class="btn btn-ghost">← View Site</a>
+      <button class="btn btn-danger" id="btnReset">Reset Defaults</button>
+      <button class="btn btn-primary" id="btnSave">Save Changes</button>
     </div>
   </header>
 
   <main class="admin-body">
 
-    <!-- ── Lock Screen ── -->
+    <!-- ── Entry Screen ── -->
     <div class="admin-section">
-      <div class="section-title">🔒 Lock Screen</div>
+      <div class="section-title">Entry Screen</div>
       <div class="field-row">
         <div class="field-group">
-          <label for="f-lockFrom">Sender line ("From, …")</label>
-          <input type="text" id="f-lockFrom" placeholder="From, Your Name">
+          <label for="f-lockFrom">From name</label>
+          <input type="text" id="f-lockFrom" placeholder="Your Name">
         </div>
         <div class="field-group">
-          <label for="f-lockTo">Recipient line ("For …")</label>
-          <input type="text" id="f-lockTo" placeholder="For My Love">
+          <label for="f-lockTo">For name</label>
+          <input type="text" id="f-lockTo" placeholder="My Love">
         </div>
       </div>
       <div class="field-row">
         <div class="field-group">
-          <label for="f-hintText">Wrong PIN hint message</label>
-          <input type="text" id="f-hintText" placeholder="that's not quite the date I meant 🌹">
+          <label for="f-entryEyebrow">Eyebrow text</label>
+          <input type="text" id="f-entryEyebrow" placeholder="A LETTER, JUST FOR YOU">
         </div>
         <div class="field-group">
-          <label for="f-bloomText">Bloom transition text</label>
-          <input type="text" id="f-bloomText" placeholder="for the girl who makes every day feel like this">
+          <label for="f-entrySubtitle">Subtitle</label>
+          <input type="text" id="f-entrySubtitle" placeholder="you know the date.">
         </div>
+      </div>
+      <div class="field-group">
+        <label for="f-hintText">Wrong PIN message</label>
+        <input type="text" id="f-hintText" placeholder="not quite — think about it.">
       </div>
     </div>
 
     <!-- ── Hero Section ── -->
     <div class="admin-section">
-      <div class="section-title">✨ Board Hero</div>
+      <div class="section-title">Hero Section</div>
       <div class="field-row">
         <div class="field-group">
           <label for="f-heroLabel">Small label above title</label>
@@ -401,79 +409,74 @@ textarea:focus {
 
     <!-- ── Photos ── -->
     <div class="admin-section gold-tape">
-      <div class="section-title">📸 Photos (10 Slots)</div>
-      <p style="font-family:'Patrick Hand',cursive;font-size:.88rem;color:var(--ink-soft);margin-bottom:20px;line-height:1.5;">
-        Upload an image <em>or</em> paste a web URL. Uploads are stored in your browser (localStorage).
-        For permanent sharing, host images online and use their URLs.
+      <div class="section-title">Photos (10 Slots)</div>
+      <p style="font-family:'Inter',sans-serif;font-size:0.8rem;color:#7A6B5F;margin-bottom:16px;line-height:1.5;">
+        Upload images or paste URLs. Photos with no URL won't appear on the visitor's view.
       </p>
-      <div class="photo-grid" id="photoGrid">
-        <!-- generated by JS -->
-      </div>
+      <div class="photo-grid" id="photoGrid"></div>
     </div>
 
-    <!-- ── Note Cards ── -->
+    <!-- ── Dictionary Cards ── -->
     <div class="admin-section">
-      <div class="section-title">📖 Note Cards</div>
+      <div class="section-title">Dictionary Cards</div>
       <div class="field-group">
         <label for="f-loveDef">Definition of "Love"</label>
         <textarea id="f-loveDef" rows="3" placeholder="Strong affection arising out of everything you are…"></textarea>
       </div>
       <div class="field-group">
         <label for="f-usDef">Definition of "Us"</label>
-        <textarea id="f-usDef" rows="3" placeholder="Write a short memory or inside joke here…"></textarea>
+        <textarea id="f-usDef" rows="3" placeholder="Two people who chose each other…"></textarea>
       </div>
     </div>
 
     <!-- ── Message Card ── -->
     <div class="admin-section">
-      <div class="section-title">💌 Message Card</div>
+      <div class="section-title">Message Card</div>
       <div class="field-group">
-        <label for="f-msgCard">Handwritten message text</label>
+        <label for="f-msgCard">Handwritten message</label>
         <textarea id="f-msgCard" rows="4" placeholder="Wishing you endless reasons to smile…"></textarea>
+      </div>
+    </div>
+
+    <!-- ── Love Letter ── -->
+    <div class="admin-section">
+      <div class="section-title">Love Letter</div>
+      <div class="field-group">
+        <label for="f-loveLetterBody">Letter body</label>
+        <textarea id="f-loveLetterBody" rows="6" placeholder="Every day with you teaches me something new about love…"></textarea>
+      </div>
+      <div class="field-group">
+        <label for="f-loveLetterSig">Closing signature</label>
+        <input type="text" id="f-loveLetterSig" placeholder="Forever yours">
       </div>
     </div>
 
     <!-- ── Quote Tags ── -->
     <div class="admin-section">
-      <div class="section-title">🏷️ Quote Tags</div>
+      <div class="section-title">Quote Tags</div>
       <div class="field-group">
-        <label for="f-quote1">Quote tag 1</label>
+        <label for="f-quote1">Quote 1</label>
         <input type="text" id="f-quote1" placeholder="She looks just like a dream…">
       </div>
       <div class="field-group">
-        <label for="f-quote2">Quote tag 2</label>
+        <label for="f-quote2">Quote 2</label>
         <input type="text" id="f-quote2" placeholder="This girl. This girl. She's the girl.">
       </div>
     </div>
 
-    <!-- ── Pink Tags ── -->
+    <!-- ── Badges ── -->
     <div class="admin-section">
-      <div class="section-title">🌸 Pink Tags</div>
-      <div class="field-row">
-        <div class="field-group">
-          <label for="f-pinkTag1">Pink tag 1</label>
-          <input type="text" id="f-pinkTag1" placeholder="cutie pie">
-        </div>
-        <div class="field-group">
-          <label for="f-pinkTag2">Pink tag 2</label>
-          <input type="text" id="f-pinkTag2" placeholder="favorite person">
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field-group">
-          <label for="f-pinkTag3">Pink tag 3 (main text)</label>
-          <input type="text" id="f-pinkTag3" placeholder="forever ∞">
-        </div>
-        <div class="field-group">
-          <label for="f-pinkTag3Sub">Pink tag 3 (sub text)</label>
-          <input type="text" id="f-pinkTag3Sub" placeholder="always yours">
-        </div>
+      <div class="section-title">Badges</div>
+      <div class="badges-editor" id="badgesEditor"></div>
+      <div class="badge-add-row">
+        <input type="text" id="badgeInput" placeholder="Add a badge label…">
+        <button class="btn btn-gold" id="btnAddBadge">Add</button>
       </div>
     </div>
 
     <!-- ── Finale ── -->
     <div class="admin-section">
-      <div class="section-title">🌹 Finale Section</div>
+      <div class="section-title">Grand Finale</div>
       <div class="field-row">
         <div class="field-group">
           <label for="f-finaleLabel">Small label</label>
@@ -486,23 +489,23 @@ textarea:focus {
       </div>
       <div class="field-group">
         <label for="f-finaleMsg">Closing message</label>
-        <textarea id="f-finaleMsg" rows="4" placeholder="Write your closing birthday message here…"></textarea>
+        <textarea id="f-finaleMsg" rows="3" placeholder="To the one who makes everything brighter…"></textarea>
       </div>
     </div>
 
     <!-- ── Passcode ── -->
     <div class="admin-section gold-tape">
-      <div class="section-title">🔑 User Passcode</div>
+      <div class="section-title">Visitor PIN</div>
       <div class="passcode-row">
         <div class="field-group">
           <label for="f-userPass">Visitor PIN (4 digits)</label>
           <input type="password" id="f-userPass" maxlength="4" pattern="\d{4}" placeholder="••••" autocomplete="off">
         </div>
-        <button class="btn btn-ghost" id="btnTogglePass" type="button" style="margin-bottom:1px;">👁 Show</button>
+        <button class="btn btn-ghost" id="btnTogglePass" type="button">Show</button>
       </div>
       <p class="passcode-note">
         This is the PIN visitors enter to see the scrapbook.<br>
-        The <strong>Admin PIN (1234)</strong> is always fixed and cannot be changed here.
+        The <strong>Admin PIN (1234)</strong> is fixed and cannot be changed.
       </p>
     </div>
 
@@ -510,273 +513,342 @@ textarea:focus {
 
   <!-- Sticky save bar -->
   <div class="save-bar">
-    <button class="btn btn-danger" id="btnReset2">↺ Reset to Defaults</button>
-    <button class="btn btn-primary" id="btnSave2" style="padding:12px 36px;font-size:1.05rem;">💾 Save All Changes</button>
+    <button class="btn btn-danger" id="btnReset2">Reset to Defaults</button>
+    <button class="btn btn-primary" id="btnSave2" style="padding:10px 32px;">Save All Changes</button>
   </div>
 
 </div><!-- #adminPanel -->
 
-<div id="toast">Changes saved! 🌹</div>
-
+<div id="toast" class="admin-toast">Changes saved!</div>
 
 <script>
-const ADMIN_PASS = '1234';
+(function() {
+  'use strict';
 
-/* ── Sparkles on the gate ───────────────────────────────────────── */
-var skyDeco = document.getElementById('skyDeco');
-for (var i = 0; i < 10; i++) {
-  var sp = document.createElement('div');
-  sp.className = 'sparkle';
-  sp.style.top  = (Math.random() * 90) + '%';
-  sp.style.left = (Math.random() * 90) + '%';
-  sp.style.animationDelay = (Math.random() * 2.4) + 's';
-  skyDeco.appendChild(sp);
-}
+  const ADMIN_PIN = '1234';
+  var adminGate  = document.getElementById('adminGate');
+  var adminPanel = document.getElementById('adminPanel');
+  var adminDots  = document.getElementById('adminDots').children;
+  var adminHint  = document.getElementById('adminHint');
+  var enteredA   = '';
 
-/* ── Petals ─────────────────────────────────────────────────────── */
-var gatePC = document.getElementById('gatePetals');
-for (var j = 0; j < 18; j++) {
-  var p = document.createElement('div');
-  p.className = 'petal';
-  if (Math.random() < 0.35) {
-    p.textContent = '🌹'; p.style.background = 'none';
-    p.style.fontSize = (14 + Math.random()*10)+'px'; p.style.borderRadius = '0';
-  }
-  p.style.left = Math.random()*100+'%';
-  p.style.setProperty('--drift', (Math.random()*80-40)+'px');
-  p.style.animationDuration = (8+Math.random()*9)+'s';
-  p.style.animationDelay = (Math.random()*10)+'s';
-  p.style.opacity = 0.35+Math.random()*0.45;
-  gatePC.appendChild(p);
-}
-
-/* ── Admin gate keypad ──────────────────────────────────────────── */
-var adminGate  = document.getElementById('adminGate');
-var adminPanel = document.getElementById('adminPanel');
-var adminDots  = document.getElementById('adminDots');
-var adminHint  = document.getElementById('adminHint');
-var enteredA   = '';
-
-function renderAdminDots() {
-  Array.from(adminDots.children).forEach(function(d, i) {
-    d.classList.toggle('filled', i < enteredA.length);
-  });
-}
-
-function wrongAdminPin() {
-  adminDots.classList.remove('shake'); void adminDots.offsetWidth; adminDots.classList.add('shake');
-  adminHint.classList.add('show');
-  setTimeout(function() { enteredA = ''; renderAdminDots(); }, 350);
-}
-
-document.getElementById('adminKeypad').addEventListener('click', function(e) {
-  var btn = e.target.closest('.key');
-  if (!btn) return;
-  var k = btn.dataset.k;
-  if (k === 'back') { enteredA = enteredA.slice(0,-1); renderAdminDots(); return; }
-  if (enteredA.length >= 4) return;
-  enteredA += k;
-  renderAdminDots();
-  if (enteredA.length === 4) {
-    setTimeout(function() {
-      if (enteredA === ADMIN_PASS) {
-        sessionStorage.setItem('adminAuth', '1');
-        adminGate.classList.add('leaving');
-        setTimeout(showPanel, 900);
+  // ── Admin gate keypad ──
+  function renderAdminDots() {
+    Array.from(adminDots).forEach(function(h, i) {
+      if (i < enteredA.length) {
+        h.classList.add('pin__heart-indicator--filled');
+        h.querySelector('path').setAttribute('fill', '#E8C27A');
       } else {
-        wrongAdminPin();
+        h.classList.remove('pin__heart-indicator--filled');
+        h.querySelector('path').setAttribute('fill', 'none');
       }
-    }, 150);
-  }
-});
-
-/* ── Show / hide panel ──────────────────────────────────────────── */
-function showPanel() {
-  adminGate.style.display = 'none';
-  adminPanel.classList.add('show');
-  loadFormValues();
-}
-
-// If already authenticated via sessionStorage, skip the gate
-if (sessionStorage.getItem('adminAuth') === '1') {
-  showPanel();
-}
-
-/* ── Photo grid builder ─────────────────────────────────────────── */
-function buildPhotoGrid(photos) {
-  var grid = document.getElementById('photoGrid');
-  grid.innerHTML = '';
-  photos.forEach(function(photo, i) {
-    var slot = document.createElement('div');
-    slot.className = 'photo-slot';
-    slot.innerHTML =
-      '<div class="slot-num">Photo ' + (i+1) + '</div>' +
-      '<div class="photo-preview" id="prev-' + i + '">' +
-        (photo.url
-          ? '<img src="' + escapeAttr(photo.url) + '" alt="photo ' + (i+1) + '">'
-          : '🌸') +
-      '</div>' +
-      '<input type="text" id="photo-url-' + i + '" placeholder="Paste image URL…" value="' + escapeAttr(photo.url) + '">' +
-      '<label class="upload-btn" for="photo-file-' + i + '">📁 Upload image</label>' +
-      '<input type="file" id="photo-file-' + i + '" accept="image/*">' +
-      '<input type="text" id="photo-cap-' + i + '" placeholder="Caption…" value="' + escapeAttr(photo.caption) + '">' +
-      '<button class="photo-clear" data-slot="' + i + '">✕ Clear photo</button>';
-    grid.appendChild(slot);
-
-    // URL input live preview
-    document.getElementById('photo-url-' + i).addEventListener('input', function() {
-      updatePreview(i, this.value);
     });
+  }
 
-    // File upload → base64
-    document.getElementById('photo-file-' + i).addEventListener('change', function() {
-      var file = this.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function(ev) {
-        document.getElementById('photo-url-' + i).value = ev.target.result;
-        updatePreview(i, ev.target.result);
+  function wrongAdminPin() {
+    var heartsRow = document.getElementById('adminDots');
+    heartsRow.classList.add('pin__hearts--shake');
+    adminHint.classList.add('pin__hint--show');
+    setTimeout(function() {
+      enteredA = '';
+      renderAdminDots();
+      heartsRow.classList.remove('pin__hearts--shake');
+    }, 400);
+    setTimeout(function() {
+      adminHint.classList.remove('pin__hint--show');
+    }, 3000);
+  }
+
+  document.getElementById('adminKeypad').addEventListener('click', function(e) {
+    var btn = e.target.closest('.pin__key');
+    if (!btn) return;
+    var k = btn.dataset.k;
+    if (k === 'back') { enteredA = enteredA.slice(0,-1); renderAdminDots(); return; }
+    if (enteredA.length >= 4) return;
+
+    btn.classList.add('pin__key--pressed');
+    setTimeout(function() { btn.classList.remove('pin__key--pressed'); }, 200);
+
+    enteredA += k;
+    renderAdminDots();
+    if (enteredA.length === 4) {
+      setTimeout(function() {
+        if (enteredA === ADMIN_PIN) {
+          sessionStorage.setItem('adminAuth', '1');
+          adminGate.classList.add('admin-gate--leaving');
+          setTimeout(showPanel, 700);
+        } else {
+          wrongAdminPin();
+        }
+      }, 150);
+    }
+  });
+
+  // Keyboard support
+  document.addEventListener('keydown', function(e) {
+    if (adminGate.style.display === 'none') return;
+    if (e.key >= '0' && e.key <= '9') {
+      var btn = document.getElementById('adminKeypad').querySelector('[data-k="' + e.key + '"]');
+      if (btn) btn.click();
+    } else if (e.key === 'Backspace') {
+      var btn = document.getElementById('adminKeypad').querySelector('[data-k="back"]');
+      if (btn) btn.click();
+    }
+  });
+
+  // ── Show / hide panel ──
+  function showPanel() {
+    adminGate.style.display = 'none';
+    adminPanel.classList.add('show');
+    loadFormValues();
+  }
+
+  // If already authenticated
+  if (sessionStorage.getItem('adminAuth') === '1') {
+    showPanel();
+  }
+
+  // ── Photo grid builder ──
+  function buildPhotoGrid(photos) {
+    var grid = document.getElementById('photoGrid');
+    grid.innerHTML = '';
+    photos.forEach(function(photo, i) {
+      var slot = document.createElement('div');
+      slot.className = 'photo-slot';
+      slot.innerHTML =
+        '<div class="slot-label">Photo ' + (i+1) + '</div>' +
+        '<div class="photo-preview" id="prev-' + i + '">' +
+          (photo.url
+            ? '<img src="' + esc(photo.url) + '" alt="photo ' + (i+1) + '">'
+            : '<div class="photo-preview__empty"><svg viewBox="0 0 30 30" fill="none"><path d="M15 10C15 7 12 5.5 11 7.5C10 9.5 10 11.5 15 16C20 11.5 20 9.5 19 7.5C18 5.5 15 7 15 10Z" stroke="#7A6B5F" stroke-width="1" fill="none"/></svg><span>Empty</span></div>') +
+        '</div>' +
+        '<input type="text" id="photo-url-' + i + '" placeholder="Paste image URL…" value="' + esc(photo.url) + '">' +
+        '<label class="upload-label" for="photo-file-' + i + '">Upload image</label>' +
+        '<input type="file" id="photo-file-' + i + '" accept="image/*">' +
+        '<input type="text" id="photo-cap-' + i + '" placeholder="Caption…" value="' + esc(photo.caption) + '">' +
+        '<button class="photo-clear-btn" data-slot="' + i + '">Clear photo</button>';
+      grid.appendChild(slot);
+
+      // URL input preview
+      document.getElementById('photo-url-' + i).addEventListener('input', function() {
+        updatePreview(i, this.value);
+      });
+
+      // File upload
+      document.getElementById('photo-file-' + i).addEventListener('change', function() {
+        var file = this.files[0];
+        if (!file) return;
+
+        // Upload via multer
+        var formData = new FormData();
+        formData.append('image', file);
+
+        fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'x-admin-key': ADMIN_PIN },
+          body: formData
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.url) {
+            document.getElementById('photo-url-' + i).value = data.url;
+            updatePreview(i, data.url);
+            showToast('Photo uploaded!');
+          }
+        })
+        .catch(function() {
+          // Fallback to base64
+          var reader = new FileReader();
+          reader.onload = function(ev) {
+            document.getElementById('photo-url-' + i).value = ev.target.result;
+            updatePreview(i, ev.target.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      // Clear
+      slot.querySelector('.photo-clear-btn').addEventListener('click', function() {
+        var idx = parseInt(this.dataset.slot);
+        document.getElementById('photo-url-' + idx).value = '';
+        updatePreview(idx, '');
+      });
+    });
+  }
+
+  function updatePreview(i, url) {
+    var prev = document.getElementById('prev-' + i);
+    if (url) {
+      prev.innerHTML = '<img src="' + esc(url) + '" alt="preview">';
+    } else {
+      prev.innerHTML = '<div class="photo-preview__empty"><svg viewBox="0 0 30 30" fill="none"><path d="M15 10C15 7 12 5.5 11 7.5C10 9.5 10 11.5 15 16C20 11.5 20 9.5 19 7.5C18 5.5 15 7 15 10Z" stroke="#7A6B5F" stroke-width="1" fill="none"/></svg><span>Empty</span></div>';
+    }
+  }
+
+  function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+  // ── Badges editor ──
+  var currentBadges = [];
+
+  function renderBadges() {
+    var editor = document.getElementById('badgesEditor');
+    editor.innerHTML = '';
+    currentBadges.forEach(function(label, i) {
+      var pill = document.createElement('div');
+      pill.className = 'badge-pill';
+      pill.innerHTML = '<span>' + esc(label) + '</span><button class="badge-pill__remove" data-idx="' + i + '">&times;</button>';
+      editor.appendChild(pill);
+
+      pill.querySelector('.badge-pill__remove').addEventListener('click', function() {
+        currentBadges.splice(parseInt(this.dataset.idx), 1);
+        renderBadges();
+      });
+    });
+  }
+
+  document.getElementById('btnAddBadge').addEventListener('click', function() {
+    var input = document.getElementById('badgeInput');
+    var val = input.value.trim();
+    if (val) {
+      currentBadges.push(val);
+      renderBadges();
+      input.value = '';
+    }
+  });
+
+  document.getElementById('badgeInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btnAddBadge').click();
+  });
+
+  // ── Load content into form ──
+  function loadFormValues() {
+    var c = getContent();
+
+    document.getElementById('f-lockFrom').value = c.lockFrom || '';
+    document.getElementById('f-lockTo').value = c.lockTo || '';
+    document.getElementById('f-entryEyebrow').value = c.entryEyebrow || '';
+    document.getElementById('f-entrySubtitle').value = c.entrySubtitle || '';
+    document.getElementById('f-hintText').value = c.hintText || '';
+    document.getElementById('f-heroLabel').value = c.heroLabel || '';
+    document.getElementById('f-heroHeadline').value = c.heroHeadline || '';
+    document.getElementById('f-heroSubtitle').value = c.heroSubtitle || '';
+    document.getElementById('f-loveDef').value = c.loveDef || '';
+    document.getElementById('f-usDef').value = c.usDef || '';
+    document.getElementById('f-msgCard').value = c.messageCard || '';
+    document.getElementById('f-loveLetterBody').value = c.loveLetterBody || '';
+    document.getElementById('f-loveLetterSig').value = c.loveLetterSignature || '';
+    document.getElementById('f-quote1').value = c.quote1 || '';
+    document.getElementById('f-quote2').value = c.quote2 || '';
+    document.getElementById('f-finaleLabel').value = c.finaleLabel || '';
+    document.getElementById('f-finaleHeadline').value = c.finaleHeadline || '';
+    document.getElementById('f-finaleMsg').value = c.finaleMessage || '';
+    document.getElementById('f-userPass').value = c.userPasscode || '';
+
+    currentBadges = (c.badges || ['cutie pie','favorite person','forever ∞','always yours']).slice();
+    renderBadges();
+    buildPhotoGrid(c.photos || []);
+  }
+
+  // ── Collect form values ──
+  function collectFormValues() {
+    var c = getContent();
+
+    c.lockFrom = document.getElementById('f-lockFrom').value.trim() || c.lockFrom;
+    c.lockTo = document.getElementById('f-lockTo').value.trim() || c.lockTo;
+    c.entryEyebrow = document.getElementById('f-entryEyebrow').value.trim() || c.entryEyebrow;
+    c.entrySubtitle = document.getElementById('f-entrySubtitle').value.trim() || c.entrySubtitle;
+    c.hintText = document.getElementById('f-hintText').value.trim() || c.hintText;
+    c.heroLabel = document.getElementById('f-heroLabel').value.trim() || c.heroLabel;
+    c.heroHeadline = document.getElementById('f-heroHeadline').value.trim() || c.heroHeadline;
+    c.heroSubtitle = document.getElementById('f-heroSubtitle').value.trim() || c.heroSubtitle;
+    c.loveDef = document.getElementById('f-loveDef').value.trim() || c.loveDef;
+    c.usDef = document.getElementById('f-usDef').value.trim() || c.usDef;
+    c.messageCard = document.getElementById('f-msgCard').value.trim() || c.messageCard;
+    c.loveLetterBody = document.getElementById('f-loveLetterBody').value.trim() || c.loveLetterBody;
+    c.loveLetterSignature = document.getElementById('f-loveLetterSig').value.trim() || c.loveLetterSignature;
+    c.quote1 = document.getElementById('f-quote1').value.trim() || c.quote1;
+    c.quote2 = document.getElementById('f-quote2').value.trim() || c.quote2;
+    c.finaleLabel = document.getElementById('f-finaleLabel').value.trim() || c.finaleLabel;
+    c.finaleHeadline = document.getElementById('f-finaleHeadline').value.trim() || c.finaleHeadline;
+    c.finaleMessage = document.getElementById('f-finaleMsg').value.trim() || c.finaleMessage;
+    c.badges = currentBadges.slice();
+
+    var newPass = document.getElementById('f-userPass').value.trim();
+    if (/^\d{4}$/.test(newPass) && newPass !== ADMIN_PIN) {
+      c.userPasscode = newPass;
+    }
+
+    c.photos = (c.photos || []).map(function(ph, i) {
+      var urlEl = document.getElementById('photo-url-' + i);
+      var capEl = document.getElementById('photo-cap-' + i);
+      return {
+        url: urlEl ? urlEl.value : ph.url,
+        caption: capEl ? capEl.value.trim() || ph.caption : ph.caption
       };
-      reader.readAsDataURL(file);
     });
 
-    // Clear button
-    slot.querySelector('.photo-clear').addEventListener('click', function() {
-      var idx = parseInt(this.dataset.slot);
-      document.getElementById('photo-url-' + idx).value = '';
-      updatePreview(idx, '');
+    return c;
+  }
+
+  // ── Save ──
+  function doSave() {
+    var data = collectFormValues();
+    saveContent(data);
+    showToast('Changes saved!');
+  }
+
+  function doReset() {
+    if (!confirm('Reset ALL content to defaults? This cannot be undone.')) return;
+    resetContent();
+    setTimeout(function() {
+      loadFormValues();
+      showToast('Reset to defaults');
+    }, 300);
+  }
+
+  document.getElementById('btnSave').addEventListener('click', doSave);
+  document.getElementById('btnSave2').addEventListener('click', doSave);
+  document.getElementById('btnReset').addEventListener('click', doReset);
+  document.getElementById('btnReset2').addEventListener('click', doReset);
+
+  // ── Toggle password ──
+  document.getElementById('btnTogglePass').addEventListener('click', function() {
+    var inp = document.getElementById('f-userPass');
+    if (inp.type === 'password') { inp.type = 'text'; this.textContent = 'Hide'; }
+    else { inp.type = 'password'; this.textContent = 'Show'; }
+  });
+
+  // ── Passcode validation ──
+  document.getElementById('f-userPass').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g,'').slice(0,4);
+    if (this.value === ADMIN_PIN) {
+      this.style.borderColor = '#9A3545';
+      this.title = 'Cannot use the admin passcode!';
+    } else {
+      this.style.borderColor = '';
+      this.title = '';
+    }
+  });
+
+  // ── Toast ──
+  var toastTimer;
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2800);
+  }
+
+  // ── Init: load from server ──
+  if (typeof loadContentFromServer === 'function') {
+    loadContentFromServer().then(function() {
+      if (adminPanel.classList.contains('show')) loadFormValues();
+    }).catch(function() {
+      if (adminPanel.classList.contains('show')) loadFormValues();
     });
-  });
-}
-
-function updatePreview(i, url) {
-  var prev = document.getElementById('prev-' + i);
-  if (url) {
-    prev.innerHTML = '<img src="' + escapeAttr(url) + '" alt="preview">';
-  } else {
-    prev.innerHTML = '🌸';
   }
-}
-
-function escapeAttr(str) {
-  return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-}
-
-/* ── Load current content into the form ─────────────────────────── */
-function loadFormValues() {
-  var c = getContent();
-
-  document.getElementById('f-lockFrom').value       = c.lockFrom;
-  document.getElementById('f-lockTo').value         = c.lockTo;
-  document.getElementById('f-hintText').value       = c.hintText;
-  document.getElementById('f-bloomText').value      = c.bloomText;
-  document.getElementById('f-heroLabel').value      = c.heroLabel;
-  document.getElementById('f-heroHeadline').value   = c.heroHeadline;
-  document.getElementById('f-heroSubtitle').value   = c.heroSubtitle;
-  document.getElementById('f-loveDef').value        = c.loveDef;
-  document.getElementById('f-usDef').value          = c.usDef;
-  document.getElementById('f-msgCard').value        = c.messageCard;
-  document.getElementById('f-quote1').value         = c.quote1;
-  document.getElementById('f-quote2').value         = c.quote2;
-  document.getElementById('f-pinkTag1').value       = c.pinkTag1;
-  document.getElementById('f-pinkTag2').value       = c.pinkTag2;
-  document.getElementById('f-pinkTag3').value       = c.pinkTag3;
-  document.getElementById('f-pinkTag3Sub').value    = c.pinkTag3Sub;
-  document.getElementById('f-finaleLabel').value    = c.finaleLabel;
-  document.getElementById('f-finaleHeadline').value = c.finaleHeadline;
-  document.getElementById('f-finaleMsg').value      = c.finaleMessage;
-  document.getElementById('f-userPass').value       = c.userPasscode;
-
-  buildPhotoGrid(c.photos);
-}
-
-/* ── Collect form values → content object ───────────────────────── */
-function collectFormValues() {
-  var c = getContent(); // start from current
-
-  c.lockFrom       = document.getElementById('f-lockFrom').value.trim()       || c.lockFrom;
-  c.lockTo         = document.getElementById('f-lockTo').value.trim()         || c.lockTo;
-  c.hintText       = document.getElementById('f-hintText').value.trim()       || c.hintText;
-  c.bloomText      = document.getElementById('f-bloomText').value.trim()      || c.bloomText;
-  c.heroLabel      = document.getElementById('f-heroLabel').value.trim()      || c.heroLabel;
-  c.heroHeadline   = document.getElementById('f-heroHeadline').value.trim()   || c.heroHeadline;
-  c.heroSubtitle   = document.getElementById('f-heroSubtitle').value.trim()   || c.heroSubtitle;
-  c.loveDef        = document.getElementById('f-loveDef').value.trim()        || c.loveDef;
-  c.usDef          = document.getElementById('f-usDef').value.trim()          || c.usDef;
-  c.messageCard    = document.getElementById('f-msgCard').value.trim()        || c.messageCard;
-  c.quote1         = document.getElementById('f-quote1').value.trim()         || c.quote1;
-  c.quote2         = document.getElementById('f-quote2').value.trim()         || c.quote2;
-  c.pinkTag1       = document.getElementById('f-pinkTag1').value.trim()       || c.pinkTag1;
-  c.pinkTag2       = document.getElementById('f-pinkTag2').value.trim()       || c.pinkTag2;
-  c.pinkTag3       = document.getElementById('f-pinkTag3').value.trim()       || c.pinkTag3;
-  c.pinkTag3Sub    = document.getElementById('f-pinkTag3Sub').value.trim()    || c.pinkTag3Sub;
-  c.finaleLabel    = document.getElementById('f-finaleLabel').value.trim()    || c.finaleLabel;
-  c.finaleHeadline = document.getElementById('f-finaleHeadline').value.trim() || c.finaleHeadline;
-  c.finaleMessage  = document.getElementById('f-finaleMsg').value.trim()      || c.finaleMessage;
-
-  var newPass = document.getElementById('f-userPass').value.trim();
-  if (/^\d{4}$/.test(newPass) && newPass !== ADMIN_PASS) {
-    c.userPasscode = newPass;
-  }
-
-  // Photos
-  c.photos = c.photos.map(function(ph, i) {
-    return {
-      url:     document.getElementById('photo-url-' + i).value,
-      caption: document.getElementById('photo-cap-' + i).value.trim() || ph.caption
-    };
-  });
-
-  return c;
-}
-
-/* ── Save ───────────────────────────────────────────────────────── */
-function doSave() {
-  var data = collectFormValues();
-  saveContent(data);
-  showToast('Changes saved! 🌹');
-}
-
-function doReset() {
-  if (!confirm('Reset ALL content to defaults? This will clear every change you\'ve made.')) return;
-  resetContent();
-  loadFormValues();
-  showToast('Reset to defaults ↺');
-}
-
-document.getElementById('btnSave').addEventListener('click',   doSave);
-document.getElementById('btnSave2').addEventListener('click',  doSave);
-document.getElementById('btnReset').addEventListener('click',  doReset);
-document.getElementById('btnReset2').addEventListener('click', doReset);
-
-/* ── Toggle password visibility ─────────────────────────────────── */
-document.getElementById('btnTogglePass').addEventListener('click', function() {
-  var inp = document.getElementById('f-userPass');
-  if (inp.type === 'password') { inp.type = 'text'; this.textContent = '🙈 Hide'; }
-  else                         { inp.type = 'password'; this.textContent = '👁 Show'; }
-});
-
-/* ── User passcode validation ────────────────────────────────────── */
-document.getElementById('f-userPass').addEventListener('input', function() {
-  this.value = this.value.replace(/\D/g,'').slice(0,4);
-  if (this.value === ADMIN_PASS) {
-    this.style.borderColor = '#b83b3b';
-    this.title = 'Cannot use the admin passcode!';
-  } else {
-    this.style.borderColor = '';
-    this.title = '';
-  }
-});
-
-/* ── Toast helper ───────────────────────────────────────────────── */
-var toastTimer;
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2800);
-}
+})();
 </script>
 </body>
 </html>

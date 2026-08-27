@@ -2,412 +2,1370 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>A Little Something For You 💌</title>
 <meta name="description" content="A personal birthday scrapbook made with love.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Pacifico&family=Patrick+Hand&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="content.js"></script>
 </head>
 <body>
 
-<!-- ============== LOCK SCREEN ============== -->
-<div id="gate">
-  <div class="petal-field" id="gatePetals"></div>
-  <div class="sky-deco">
-    <div class="moon"></div>
-    <div class="cloud c1">☁️</div>
-    <div class="cloud c2">☁️</div>
-    <div class="cloud c3">☁️</div>
-    <div class="bloom-sprig s1">🌸</div>
-    <div class="bloom-sprig s2">🌷</div>
-    <div class="bloom-sprig s3">🌿</div>
-    <div class="bloom-sprig s4">🌼</div>
-    <div class="bloom-sprig s5">🌹</div>
-    <div class="bloom-sprig s6">🌹</div>
-  </div>
+<!-- ============== 3D ATMOSPHERIC PARTICLE CANVAS (Entry & PIN) ============== -->
+<canvas id="particleCanvas" class="particle-canvas"></canvas>
 
-  <div class="lock-card">
-    <svg class="padlock" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50 8c-14 0-22 12-22 12l6 20c0 0 8-14 16-14s16 14 16 14l6-20c0 0-8-12-22-12z" fill="#c79a4b" opacity="0"/>
-      <path d="M50 6C36 6 26 16 26 30v10h-4c-3 0-5 2-5 5v38c0 3 2 5 5 5h56c3 0 5-2 5-5V45c0-3-2-5-5-5h-4V30c0-14-10-24-24-24zm0 8c10 0 16 7 16 16v10H34V30c0-9 6-16 16-16z" fill="#c1435a"/>
-      <circle cx="50" cy="60" r="7" fill="#fbf5e8"/>
-      <rect x="47" y="60" width="6" height="14" rx="3" fill="#fbf5e8"/>
-      <circle cx="78" cy="34" r="6" fill="none" stroke="#c79a4b" stroke-width="3"/>
-      <rect x="82" y="38" width="14" height="4" rx="2" fill="#c79a4b" transform="rotate(35 82 38)"/>
-    </svg>
+<!-- ============== ENTRY SCREEN ============== -->
+<div id="entry" class="screen screen--dark">
+  <div class="entry__content">
+    <!-- Eyebrow -->
+    <p class="eyebrow" id="entryEyebrow">A LETTER, JUST FOR YOU</p>
 
-    <div class="dedication">
-      <div class="line hand" id="lockFrom">From, Your Name</div>
-      <div class="names hand" id="lockTo">For My Love</div>
+    <!-- Envelope SVG -->
+    <div class="envelope-wrap" id="envelopeTap">
+      <svg class="envelope-svg" viewBox="0 0 420 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Envelope body -->
+        <rect x="30" y="80" width="360" height="200" rx="8" fill="#F3E7D3" stroke="#C9B8A8" stroke-width="1.5"/>
+        <!-- Envelope flap -->
+        <path d="M30 80 L210 200 L390 80" fill="#EDE0CC" stroke="#C9B8A8" stroke-width="1.5" stroke-linejoin="round"/>
+        <!-- Inner fold lines -->
+        <path d="M30 280 L160 180" stroke="#D9CFC0" stroke-width="0.8" opacity="0.5"/>
+        <path d="M390 280 L260 180" stroke="#D9CFC0" stroke-width="0.8" opacity="0.5"/>
+        <!-- Wax seal -->
+        <circle cx="210" cy="175" r="32" fill="#7A2130"/>
+        <circle cx="210" cy="175" r="28" fill="none" stroke="#F3E9DA" stroke-width="1.2" opacity="0.6"/>
+        <!-- Gold heart in seal -->
+        <path d="M210 165 C210 160, 200 155, 196 162 C192 169, 210 182, 210 182 C210 182, 228 169, 224 162 C220 155, 210 160, 210 165Z" fill="#E8C27A"/>
+        <!-- Subtle seal texture -->
+        <circle cx="210" cy="175" r="25" fill="none" stroke="#9A3545" stroke-width="0.5" opacity="0.3"/>
+      </svg>
     </div>
 
-    <div class="dots" id="dots">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <!-- Personalization -->
+    <div class="entry__personal">
+      <p class="entry__from" id="entryFrom">From, Your Name</p>
+      <p class="entry__to" id="entryTo">For My Love</p>
     </div>
 
-    <div class="keypad" id="keypad">
-      <button class="key" data-k="1">1</button>
-      <button class="key" data-k="2">2</button>
-      <button class="key" data-k="3">3</button>
-      <button class="key" data-k="4">4</button>
-      <button class="key" data-k="5">5</button>
-      <button class="key" data-k="6">6</button>
-      <button class="key" data-k="7">7</button>
-      <button class="key" data-k="8">8</button>
-      <button class="key" data-k="9">9</button>
-      <div></div>
-      <button class="key" data-k="0">0</button>
-      <button class="key wide" data-k="back">⌫</button>
-    </div>
+    <!-- Subtitle -->
+    <p class="entry__subtitle" id="entrySubtitle">you know the date.</p>
 
-    <div class="gate-hint" id="hint">that's not quite the date I meant 🌹</div>
+    <!-- Tap hint -->
+    <p class="entry__tap">TAP TO OPEN</p>
   </div>
 </div>
 
-<!-- ============== BLOOM TRANSITION ============== -->
-<div id="bloom">
-  <div class="rose-burst" id="roseBurst"></div>
-  <div class="bloom-text" id="bloomText">for the girl who makes every day feel like this</div>
+<!-- ============== PIN ENTRY ============== -->
+<div id="pinScreen" class="screen screen--dark" style="display:none;">
+  <div class="pin__content" id="pinContentBox">
+    <!-- Heart digit indicators -->
+    <div class="pin__hearts" id="pinHearts">
+      <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      <svg class="pin__heart-indicator" viewBox="0 0 24 24"><path d="M12 5.5C12 3.5 10 2 8 3.5C6 5 6 7.5 12 12.5C18 7.5 18 5 16 3.5C14 2 12 3.5 12 5.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    </div>
+
+    <!-- Hairline divider -->
+    <div class="pin__divider"></div>
+
+    <!-- Heart keypad -->
+    <div class="pin__keypad" id="pinKeypad">
+      <button class="pin__key" data-k="1">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">1</span>
+      </button>
+      <button class="pin__key" data-k="2">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">2</span>
+      </button>
+      <button class="pin__key" data-k="3">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">3</span>
+      </button>
+      <button class="pin__key" data-k="4">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">4</span>
+      </button>
+      <button class="pin__key" data-k="5">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">5</span>
+      </button>
+      <button class="pin__key" data-k="6">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">6</span>
+      </button>
+      <button class="pin__key" data-k="7">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">7</span>
+      </button>
+      <button class="pin__key" data-k="8">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">8</span>
+      </button>
+      <button class="pin__key" data-k="9">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">9</span>
+      </button>
+      <div class="pin__key-spacer"></div>
+      <button class="pin__key" data-k="0">
+        <svg class="pin__key-heart" viewBox="0 0 64 64"><path d="M32 54 C12 38 6 26 6 17 C6 9 12 4 20 4 C26 4 30 7 32 12 C34 7 38 4 44 4 C52 4 58 9 58 17 C58 26 52 38 32 54 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="pin__key-num">0</span>
+      </button>
+      <button class="pin__key pin__key--del" data-k="back">
+        <span class="pin__del-text">DEL</span>
+      </button>
+    </div>
+
+    <!-- Error hint -->
+    <p class="pin__hint" id="pinHint">not quite — think about it.</p>
+  </div>
 </div>
 
-<!-- ============== SCRAPBOOK BOARD ============== -->
-<div id="board">
+<!-- ============== TRANSITION OVERLAY (PINK ATMOSPHERE + CELEBRATORY CRACKER BURST + LETTER) ============== -->
+<div id="transitionOverlay" class="transition-overlay">
+  <!-- Burst Canvas for Roses & Gold cracker explosion -->
+  <canvas id="burstCanvas" class="burst-canvas"></canvas>
 
-  <section class="board-hero">
-    <div class="petal-field" id="boardPetals"></div>
-    <div class="label" id="heroLabel">Happy Birthday</div>
-    <h1 id="heroHeadline">My Love</h1>
-    <p id="heroSubtitle">I put together a little board of us — scroll through it, love. Every piece of it is real.</p>
-    <div class="scroll-cue">Scroll ↓</div>
+  <!-- Letter that opens and zooms through -->
+  <div class="trans-letter-card" id="transLetterCard">
+    <div class="trans-envelope" id="transEnvelope">
+      <div class="trans-envelope__flap"></div>
+      <div class="trans-seal"><span>❤️</span></div>
+      <div class="trans-paper">
+        <h3>For You</h3>
+        <p id="transLetterSub">happy birthday, my love</p>
+      </div>
+      <div class="trans-envelope__body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============== SCRAPBOOK ============== -->
+<div id="scrapbook" class="scrapbook" style="display:none;">
+
+  <!-- Subtle falling rose petals & sparkles canvas for scrapbook -->
+  <canvas id="scrapbookCanvas" class="scrapbook-particle-canvas"></canvas>
+
+  <!-- ── Hero Section ── -->
+  <section class="hero">
+    <p class="hero__label" id="heroLabel">Happy Birthday</p>
+    <h1 class="hero__title" id="heroHeadline">My Love</h1>
+    <p class="hero__subtitle" id="heroSubtitle">I put together a little board of us — scroll through it, love. Every piece of it is real.</p>
+    <p class="hero__scroll">SCROLL ↓</p>
   </section>
 
-  <div class="board">
+  <!-- ── Cards & Masonry Section ── -->
+  <section class="cards-section">
+    <div class="card-grid">
 
-    <div class="card note-card">
-      <div class="word hand">Love</div>
-      <div class="phon">[ luv ] · noun</div>
-      <div class="def" id="loveDef">Strong affection arising out of everything you are — your laugh, your patience with me, the way you make ordinary days feel like something worth remembering.</div>
+      <!-- Note Card: Love -->
+      <div class="card-item dictionary-card" style="--card-rot: -2deg;">
+        <div class="washi-tape"></div>
+        <div class="dict__term">Love</div>
+        <div class="dict__phon">[ luv ] · noun</div>
+        <div class="dict__def" id="loveDef">Strong affection arising out of everything you are — your laugh, your patience with me, the way you make ordinary days feel like something worth remembering.</div>
+      </div>
+
+      <!-- Photo 1: the beginning -->
+      <div id="photoSlot0" class="card-item photo-card" style="--card-rot: 2deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 1</div>
+        <div class="photo-card__caption" data-caption="0">the beginning</div>
+      </div>
+
+      <!-- Sticker: Teddy Bear -->
+      <div class="card-item sticker-card sticker--bear" style="--card-rot: -1.5deg;">
+        <div class="washi-tape"></div>
+        <div class="sticker-wrap">🧸</div>
+      </div>
+
+      <!-- Pink Tag 1: cutie pie -->
+      <div class="card-item pink-tag" style="--card-rot: 1.8deg;">
+        <div class="washi-tape washi-tape--gold"></div>
+        <div class="hand" id="pinkTag1">cutie pie</div>
+      </div>
+
+      <!-- Sticker: Rainbow -->
+      <div class="card-item sticker-card sticker--rainbow" style="--card-rot: -2deg;">
+        <div class="washi-tape"></div>
+        <div class="sticker-wrap">🌈</div>
+      </div>
+
+      <!-- Message Card -->
+      <div class="card-item message-card" style="--card-rot: 1.5deg;">
+        <div class="washi-tape"></div>
+        <p class="message-card__text" id="msgCard">Wishing you endless reasons to smile, the courage to chase everything you want, and enough happiness to make every day feel worth it. I am so lucky to love you.</p>
+      </div>
+
+      <!-- Sticker: Glowing Heart -->
+      <div class="card-item sticker-card sticker--heart">
+        <div class="sticker-wrap">💗</div>
+      </div>
+
+      <!-- Photo 2: that day -->
+      <div id="photoSlot1" class="card-item photo-card" style="--card-rot: -2deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 2</div>
+        <div class="photo-card__caption" data-caption="1">that day</div>
+      </div>
+
+      <!-- Quote Tag 1 -->
+      <div class="card-item quote-tag" style="--card-rot: -1.5deg;">
+        <p class="quote-tag__text" id="quote1">"She looks just like a dream — the prettiest girl I have ever seen."</p>
+      </div>
+
+      <!-- Sticker: Music -->
+      <div class="card-item sticker-card sticker--music" style="--card-rot: 2deg;">
+        <div class="sticker-wrap">🎵</div>
+      </div>
+
+      <!-- Photo 3: just us -->
+      <div id="photoSlot2" class="card-item photo-card" style="--card-rot: 2.5deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 3</div>
+        <div class="photo-card__caption" data-caption="2">just us</div>
+      </div>
+
+      <!-- Note Card: Us -->
+      <div class="card-item dictionary-card" style="--card-rot: 1.5deg;">
+        <div class="washi-tape washi-tape--gold"></div>
+        <div class="dict__term">Us</div>
+        <div class="dict__phon">[ uhs ] · pronoun</div>
+        <div class="dict__def" id="usDef">Two people who chose each other and keep choosing each other — through ordinary days, late-night talks, and everything in between.</div>
+      </div>
+
+      <!-- Sticker: Ghost Duo -->
+      <div class="card-item sticker-card sticker--ghosts" style="--card-rot: -1deg;">
+        <div class="sticker-wrap">👻👻</div>
+      </div>
+
+      <!-- Photo 4: forever, please -->
+      <div id="photoSlot3" class="card-item photo-card" style="--card-rot: -2.5deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 4</div>
+        <div class="photo-card__caption" data-caption="3">forever, please</div>
+      </div>
+
+      <!-- Sticker: Golden Star -->
+      <div class="card-item sticker-card sticker--star" style="--card-rot: 3deg;">
+        <div class="sticker-wrap">⭐</div>
+      </div>
+
+      <!-- Pink Tag 2: favorite person -->
+      <div class="card-item pink-tag" style="--card-rot: -1.8deg;">
+        <div class="hand" id="pinkTag2">favorite person</div>
+      </div>
+
+      <!-- Photo 5: my favorite one -->
+      <div id="photoSlot4" class="card-item photo-card" style="--card-rot: 1.5deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 5</div>
+        <div class="photo-card__caption" data-caption="4">my favorite one</div>
+      </div>
+
+      <!-- Photo 6: us, always -->
+      <div id="photoSlot5" class="card-item photo-card" style="--card-rot: -2deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 6</div>
+        <div class="photo-card__caption" data-caption="5">us, always</div>
+      </div>
+
+      <!-- Sticker: Ribbon Bow -->
+      <div class="card-item sticker-card sticker--bow" style="--card-rot: 2deg;">
+        <div class="washi-tape"></div>
+        <div class="sticker-wrap">🎀</div>
+      </div>
+
+      <!-- Sticker: Kiss Lips -->
+      <div class="card-item sticker-card sticker--kiss" style="--card-rot: -3deg;">
+        <div class="sticker-wrap">💋</div>
+      </div>
+
+      <!-- Photo 7: silly face -->
+      <div id="photoSlot6" class="card-item photo-card" style="--card-rot: 2.8deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌸 Add Photo 7</div>
+        <div class="photo-card__caption" data-caption="6">silly face</div>
+      </div>
+
+      <!-- Quote Tag 2 -->
+      <div class="card-item quote-tag" style="--card-rot: 1.5deg;">
+        <p class="quote-tag__text" id="quote2">"This girl. This girl. She is the girl."</p>
+      </div>
+
+      <!-- Photo 8: golden hour -->
+      <div id="photoSlot7" class="card-item photo-card" style="--card-rot: -2deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌸 Add Photo 8</div>
+        <div class="photo-card__caption" data-caption="7">golden hour</div>
+      </div>
+
+      <!-- Sticker: Love Letter -->
+      <div class="card-item sticker-card sticker--letter" style="--card-rot: -1.5deg;">
+        <div class="washi-tape"></div>
+        <div class="sticker-wrap">💌</div>
+      </div>
+
+      <!-- Sticker: Evil Eye -->
+      <div class="card-item sticker-card sticker--evileye" style="--card-rot: 2deg;">
+        <div class="sticker-wrap">🧿</div>
+      </div>
+
+      <!-- Photo 9: cozy nights -->
+      <div id="photoSlot8" class="card-item photo-card" style="--card-rot: 1.8deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌸 Add Photo 9</div>
+        <div class="photo-card__caption" data-caption="8">cozy nights</div>
+      </div>
+
+      <!-- Sticker: Butterfly -->
+      <div class="card-item sticker-card sticker--butterfly" style="--card-rot: -2.5deg;">
+        <div class="sticker-wrap">🦋</div>
+      </div>
+
+      <!-- Photo 10: my whole heart -->
+      <div id="photoSlot9" class="card-item photo-card" style="--card-rot: -1.5deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌸 Add Photo 10</div>
+        <div class="photo-card__caption" data-caption="9">my whole heart</div>
+      </div>
+
+      <!-- Sticker: Strawberry -->
+      <div class="card-item sticker-card sticker--berry" style="--card-rot: 2deg;">
+        <div class="sticker-wrap">🍓</div>
+      </div>
+
+      <!-- Pink Tag 3: forever ∞ -->
+      <div class="card-item pink-tag" style="--card-rot: -2deg;">
+        <div class="washi-tape washi-tape--gold"></div>
+        <div class="hand" id="pinkTag3">forever ∞</div>
+        <div class="sub" id="pinkTag3Sub">always yours</div>
+      </div>
+
+      <!-- Badges row -->
+      <div class="card-item badges-row" id="badgesRow"></div>
+
     </div>
+  </section>
 
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="0">🌹 Add Photo 1</div>
-      <div class="polaroid-cap" data-caption="0">the beginning</div>
+  <!-- ── Love Letter Section ── -->
+  <section class="love-letter">
+    <div class="love-letter__inner">
+      <p class="love-letter__body" id="loveLetterBody">Every day with you teaches me something new about love — that it is not always grand gestures, but quiet mornings, shared laughter, and the comfort of knowing someone truly sees you. You are my favorite person, my safest place, and the most beautiful part of my story. I do not need a special day to tell you this, but I will take any excuse to remind you: loving you is the easiest, most extraordinary thing I have ever done.</p>
+      <p class="love-letter__sig" id="loveLetterSig">Forever yours</p>
     </div>
+  </section>
 
-    <div class="card sticker"><span>🧸</span></div>
-
-    <div class="card tag pink">
-      <div class="hand" id="pinkTag1" style="font-size:1.7rem;">cutie pie</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:.5s">🌈</span></div>
-
-    <div class="card msg-card">
-      <p id="msgCard">Wishing you endless reasons to smile, the courage to chase everything you want, and enough happiness to make every day feel worth it. I'm so lucky to love you.</p>
-    </div>
-
-    <div class="card sticker bounce"><span>💗</span></div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="1">🌹 Add Photo 2</div>
-      <div class="polaroid-cap" data-caption="1">that day</div>
-    </div>
-
-    <div class="card tag">
-      <div class="quote" id="quote1">"She looks just like a dream — the prettiest girl I've ever seen."</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:.4s">🎵</span></div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="2">🌹 Add Photo 3</div>
-      <div class="polaroid-cap" data-caption="2">just us</div>
-    </div>
-
-    <div class="card note-card">
-      <div class="word hand">Us</div>
-      <div class="phon">[ uhs ] · pronoun</div>
-      <div class="def" id="usDef">Write a short memory or inside joke here — something only the two of you would understand.</div>
-    </div>
-
-    <div class="card sticker duo blink"><span>👻</span><span>👻</span></div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="3">🌹 Add Photo 4</div>
-      <div class="polaroid-cap" data-caption="3">forever, please</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:.8s">⭐</span></div>
-
-    <div class="card tag pink">
-      <div class="hand" id="pinkTag2" style="font-size:1.7rem;">favorite person</div>
-    </div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="4">🌹 Add Photo 5</div>
-      <div class="polaroid-cap" data-caption="4">my favorite one</div>
-    </div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="5">🌹 Add Photo 6</div>
-      <div class="polaroid-cap" data-caption="5">us, always</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:1.1s">🎀</span></div>
-
-    <div class="card sticker spin"><span>💋</span></div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="6">🌸 Add Photo 7</div>
-      <div class="polaroid-cap" data-caption="6">silly face</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:.6s">🐻</span></div>
-
-    <div class="card tag">
-      <div class="quote" id="quote2">"This girl. This girl. She's the girl."</div>
-    </div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="7">🌸 Add Photo 8</div>
-      <div class="polaroid-cap" data-caption="7">golden hour</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:1.4s">💌</span></div>
-
-    <div class="card sticker"><span style="animation-delay:.3s">🧿</span></div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="8">🌸 Add Photo 9</div>
-      <div class="polaroid-cap" data-caption="8">cozy nights</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:.2s">🦋</span></div>
-
-    <div class="card polaroid">
-      <div class="polaroid-frame" data-photo="9">🌸 Add Photo 10</div>
-      <div class="polaroid-cap" data-caption="9">my whole heart</div>
-    </div>
-
-    <div class="card sticker"><span style="animation-delay:.9s">🍓</span></div>
-
-    <div class="card tag pink">
-      <div class="hand" id="pinkTag3" style="font-size:1.7rem;">forever ∞</div>
-      <div class="sub" id="pinkTag3Sub">always yours</div>
-    </div>
-
-    <div class="card sticker bounce"><span>🩷</span></div>
-
-  </div>
-
+  <!-- ── Grand Finale ── -->
   <section class="finale">
-    <div class="label" id="finaleLabel">To many more</div>
-    <h2 id="finaleHeadline">Happy Birthday, my love</h2>
-    <p id="finaleMsg">Write your closing birthday message here — the thing you most want her to know today.</p>
-    <div class="roses-row"><span>🌹</span><span>🌹</span><span>🌹</span><span>🌹</span><span>🌹</span></div>
+    <p class="finale__label" id="finaleLabel">To many more</p>
+    <h2 class="finale__headline" id="finaleHeadline">Happy Birthday, my love</h2>
+    <p class="finale__message" id="finaleMsg">To the one who makes everything brighter — I hope this year brings you all the magic you deserve. Happy birthday, my love.</p>
+    <div class="finale__roses" id="finaleRoses">
+      <span class="finale__rose-item">🌹</span>
+      <span class="finale__rose-item">🌹</span>
+      <span class="finale__rose-item">🌹</span>
+      <span class="finale__rose-item">🌹</span>
+      <span class="finale__rose-item">🌹</span>
+    </div>
   </section>
 
-</div><!-- #board -->
+</div><!-- #scrapbook -->
+
+<!-- Cursor trail canvas (desktop only) -->
+<canvas id="cursorTrail" class="cursor-trail-canvas"></canvas>
 
 <script>
-// ── Admin passcode (never changes) ──────────────────────────────
-const ADMIN_PASS = "1234";
+(function() {
+  'use strict';
 
-// ── Populate all content fields from content.js ─────────────────
-document.addEventListener('DOMContentLoaded', function () {
-  var c = getContent();
+  // ── CONSTANTS & STATE ──
+  const ADMIN_PIN = '1234';
+  let USER_PIN = '2808';
+  let entered = '';
 
-  // Lock screen
-  document.getElementById('lockFrom').textContent  = c.lockFrom;
-  document.getElementById('lockTo').textContent    = c.lockTo;
-  document.getElementById('hint').textContent      = c.hintText;
-  document.getElementById('bloomText').textContent = c.bloomText;
+  // ── DOM ELEMENTS ──
+  const particleCanvas    = document.getElementById('particleCanvas');
+  const burstCanvas       = document.getElementById('burstCanvas');
+  const scrapbookCanvas   = document.getElementById('scrapbookCanvas');
+  const entry             = document.getElementById('entry');
+  const pinScreen         = document.getElementById('pinScreen');
+  const pinContentBox     = document.getElementById('pinContentBox');
+  const transOverlay      = document.getElementById('transitionOverlay');
+  const transLetterCard   = document.getElementById('transLetterCard');
+  const transEnvelope     = document.getElementById('transEnvelope');
+  const scrapbook         = document.getElementById('scrapbook');
+  const pinHearts         = document.getElementById('pinHearts').children;
+  const pinKeypad         = document.getElementById('pinKeypad');
+  const pinHint           = document.getElementById('pinHint');
 
-  // Hero
-  document.getElementById('heroLabel').textContent    = c.heroLabel;
-  document.getElementById('heroHeadline').textContent = c.heroHeadline;
-  document.getElementById('heroSubtitle').textContent = c.heroSubtitle;
+  // ================================================================
+  // 1. 3D ATMOSPHERIC PARTICLE ENGINE (ENTRY & PIN SCREEN)
+  // ================================================================
+  let atmosphericEngine = null;
 
-  // Cards
-  document.getElementById('loveDef').textContent  = c.loveDef;
-  document.getElementById('usDef').textContent    = c.usDef;
-  document.getElementById('msgCard').textContent  = c.messageCard;
+  class AtmosphericEngine {
+    constructor(canvas) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.particles = [];
+      this.running = true;
+      this.mouseX = window.innerWidth / 2;
+      this.mouseY = window.innerHeight / 2;
+      this.targetMouseX = this.mouseX;
+      this.targetMouseY = this.mouseY;
+      this.activeScreen = 'entry'; // 'entry' | 'pin'
 
-  // Tags
-  document.getElementById('quote1').textContent    = '\u201c' + c.quote1 + '\u201d';
-  document.getElementById('quote2').textContent    = '\u201c' + c.quote2 + '\u201d';
-  document.getElementById('pinkTag1').textContent  = c.pinkTag1;
-  document.getElementById('pinkTag2').textContent  = c.pinkTag2;
-  document.getElementById('pinkTag3').textContent  = c.pinkTag3;
-  document.getElementById('pinkTag3Sub').textContent = c.pinkTag3Sub;
-
-  // Finale
-  document.getElementById('finaleLabel').textContent    = c.finaleLabel;
-  document.getElementById('finaleHeadline').textContent = c.finaleHeadline;
-  document.getElementById('finaleMsg').textContent      = c.finaleMessage;
-
-  // Photos
-  c.photos.forEach(function (photo, i) {
-    var frame = document.querySelector('[data-photo="' + i + '"]');
-    var cap   = document.querySelector('[data-caption="' + i + '"]');
-    if (cap)   cap.textContent = photo.caption;
-    if (frame && photo.url) {
-      frame.innerHTML = '<img src="' + photo.url + '" alt="Memory photo ' + (i+1) + '">';
+      this.init();
     }
-  });
 
-  // ── Scattered sparkles on the lock screen ─────────────────────
-  var sky = document.querySelector('.sky-deco');
-  for (var i = 0; i < 10; i++) {
-    var s = document.createElement('div');
-    s.className = 'sparkle';
-    s.style.top  = (Math.random() * 90) + '%';
-    s.style.left = (Math.random() * 90) + '%';
-    s.style.animationDelay = (Math.random() * 2.4) + 's';
-    sky.appendChild(s);
+    init() {
+      this.resize();
+      window.addEventListener('resize', () => this.resize());
+      window.addEventListener('mousemove', (e) => {
+        this.targetMouseX = e.clientX;
+        this.targetMouseY = e.clientY;
+      });
+
+      // Spawn 50-65 particles with 3D depth
+      const count = window.innerWidth < 600 ? 35 : 55;
+      const types = ['heart_3d', 'rose_petal', 'flower', 'star', 'sparkle', 'bow', 'bokeh'];
+      for (let i = 0; i < count; i++) {
+        this.particles.push(this.createParticle(types[i % types.length], true));
+      }
+
+      this.animate = this.animate.bind(this);
+      requestAnimationFrame(this.animate);
+    }
+
+    resize() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+
+    createParticle(type, randomY = false) {
+      const z = 0.25 + Math.random() * 1.25; // 3D depth layer
+      return {
+        type: type,
+        x: Math.random() * this.canvas.width,
+        y: randomY ? Math.random() * this.canvas.height : -40,
+        z: z,
+        size: (12 + Math.random() * 18) * z,
+        vx: (Math.random() - 0.5) * 0.4 * z,
+        vy: (0.35 + Math.random() * 0.65) * z,
+        swayFreq: 0.001 + Math.random() * 0.002,
+        swayAmp: 20 + Math.random() * 40,
+        swayPhase: Math.random() * Math.PI * 2,
+        rot: Math.random() * Math.PI * 2,
+        vrot: (Math.random() - 0.5) * 0.02,
+        pitch: Math.random() * Math.PI * 2,
+        vpitch: (Math.random() - 0.5) * 0.015,
+        opacity: (0.35 + Math.random() * 0.45) * Math.min(1, z * 0.9),
+        color: ['#ff4d6d', '#c9184a', '#ff758f', '#e8c27a', '#ffccd5'][Math.floor(Math.random() * 5)]
+      };
+    }
+
+    drawParticle(p) {
+      const ctx = this.ctx;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+
+      // 3D rotation projection
+      const scaleX = Math.cos(p.pitch);
+      ctx.scale(scaleX, 1);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.opacity;
+
+      if (p.type === 'heart_3d') {
+        // 3D-shaded heart with plush gradient and specular gleam
+        const s = p.size * 0.5;
+        const grad = ctx.createRadialGradient(-s*0.3, -s*0.3, 0, 0, 0, s*1.4);
+        grad.addColorStop(0, '#ff758f');
+        grad.addColorStop(0.5, '#c9184a');
+        grad.addColorStop(1, '#590d22');
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.moveTo(0, s * 0.3);
+        ctx.bezierCurveTo(-s, -s * 0.6, -s * 1.1, s * 0.3, 0, s * 1.2);
+        ctx.bezierCurveTo(s * 1.1, s * 0.3, s, -s * 0.6, 0, s * 0.3);
+        ctx.fill();
+
+        // Specular highlight dot
+        ctx.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx.beginPath();
+        ctx.arc(-s * 0.35, -s * 0.2, s * 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+      } else if (p.type === 'rose_petal') {
+        // Organic curved velvet rose petal
+        const w = p.size * 0.8;
+        const h = p.size * 1.2;
+        const grad = ctx.createLinearGradient(-w/2, -h/2, w/2, h/2);
+        grad.addColorStop(0, '#c9184a');
+        grad.addColorStop(0.6, '#800f2f');
+        grad.addColorStop(1, '#590d22');
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.moveTo(0, -h/2);
+        ctx.bezierCurveTo(w/1.5, -h/3, w/1.2, h/2, 0, h/2);
+        ctx.bezierCurveTo(-w/1.2, h/2, -w/1.5, -h/3, 0, -h/2);
+        ctx.fill();
+
+      } else if (p.type === 'flower') {
+        // 5-petal sakura blossom
+        const r = p.size * 0.45;
+        ctx.fillStyle = '#ffccd5';
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath();
+          ctx.ellipse(0, -r * 0.8, r * 0.4, r * 0.7, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.rotate((Math.PI * 2) / 5);
+        }
+        // Center pistil
+        ctx.fillStyle = '#ffd166';
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+
+      } else if (p.type === 'star') {
+        // Golden glowing star
+        const r = p.size * 0.5;
+        ctx.fillStyle = '#e8c27a';
+        ctx.shadowColor = '#e8c27a';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++) {
+          const rad = (i % 2 === 0) ? r : r * 0.4;
+          const a = (i * Math.PI) / 4;
+          if (i === 0) ctx.moveTo(Math.cos(a) * rad, Math.sin(a) * rad);
+          else ctx.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+      } else if (p.type === 'sparkle') {
+        // Cross sparkle
+        const s = p.size * 0.5;
+        ctx.fillStyle = '#fff6e5';
+        ctx.shadowColor = '#e8c27a';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(0, -s);
+        ctx.quadraticCurveTo(0, 0, s, 0);
+        ctx.quadraticCurveTo(0, 0, 0, s);
+        ctx.quadraticCurveTo(0, 0, -s, 0);
+        ctx.quadraticCurveTo(0, 0, 0, -s);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+      } else if (p.type === 'bow') {
+        // Pink ribbon bow
+        const b = p.size * 0.4;
+        ctx.fillStyle = '#ff8fa3';
+        ctx.beginPath();
+        ctx.ellipse(-b*0.7, 0, b*0.6, b*0.35, -0.3, 0, Math.PI*2);
+        ctx.ellipse(b*0.7, 0, b*0.6, b*0.35, 0.3, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#c9184a';
+        ctx.beginPath();
+        ctx.arc(0, 0, b*0.25, 0, Math.PI*2);
+        ctx.fill();
+
+      } else if (p.type === 'bokeh') {
+        // Soft glowing blur orb
+        const rad = p.size * 0.7;
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
+        grad.addColorStop(0, 'rgba(232, 194, 122, 0.4)');
+        grad.addColorStop(0.5, 'rgba(255, 117, 143, 0.2)');
+        grad.addColorStop(1, 'rgba(255, 117, 143, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    animate(timestamp) {
+      if (!this.running) return;
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      // Smooth mouse parallax easing
+      this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
+      this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
+      const parallaxX = (this.mouseX - this.canvas.width / 2) * 0.03;
+      const parallaxY = (this.mouseY - this.canvas.height / 2) * 0.03;
+
+      // Central bounds clearance for PIN controls
+      const centerX = this.canvas.width / 2;
+      const centerY = this.canvas.height / 2;
+      const clearRadiusX = 180;
+      const clearRadiusY = 220;
+
+      for (let i = 0; i < this.particles.length; i++) {
+        const p = this.particles[i];
+
+        // Motion physics with sinusoidal sway
+        p.y += p.vy;
+        p.x += p.vx + Math.sin(timestamp * p.swayFreq + p.swayPhase) * 0.6;
+        p.rot += p.vrot;
+        p.pitch += p.vpitch;
+
+        // Apply 3D parallax
+        const renderX = p.x + parallaxX * p.z;
+        const renderY = p.y + parallaxY * p.z;
+
+        // Soft clearance check around central PIN box
+        let currentOpacity = p.opacity;
+        if (this.activeScreen === 'pin') {
+          const dx = (renderX - centerX) / clearRadiusX;
+          const dy = (renderY - centerY) / clearRadiusY;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 1.0) {
+            currentOpacity *= Math.max(0.12, distSq * 0.7);
+          }
+        }
+
+        const prevOp = p.opacity;
+        p.opacity = currentOpacity;
+        this.drawParticle({ ...p, x: renderX, y: renderY });
+        p.opacity = prevOp;
+
+        // Recycle when out of view
+        if (p.y > this.canvas.height + 50 || p.x < -50 || p.x > this.canvas.width + 50) {
+          this.particles[i] = this.createParticle(p.type, false);
+        }
+      }
+
+      requestAnimationFrame(this.animate);
+    }
+
+    stop() {
+      this.running = false;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
   }
 
-  // ── Falling petals ────────────────────────────────────────────
-  function spawnPetals(container, count) {
-    for (var j = 0; j < count; j++) {
-      var useRose = Math.random() < 0.35;
-      var p = document.createElement('div');
-      p.className = 'petal';
-      if (useRose) {
-        p.textContent = '🌹';
-        p.style.background   = 'none';
-        p.style.fontSize     = (14 + Math.random() * 10) + 'px';
-        p.style.borderRadius = '0';
+  // ================================================================
+  // 2. CELEBRATION BURST ENGINE (FULL-SCREEN ROSE & GOLD CRACKER FIREWORK)
+  // ================================================================
+  class BurstEngine {
+    constructor(canvas) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.particles = [];
+      this.running = false;
+      this.resize();
+    }
+
+    resize() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+
+    explode(originX, originY) {
+      this.resize();
+      this.particles = [];
+      this.running = true;
+
+      // Screen diagonal ratio to scale particle reach
+      const screenDiag = Math.sqrt(this.canvas.width * this.canvas.width + this.canvas.height * this.canvas.height);
+      const speedScale = Math.max(1, screenDiag / 1100);
+
+      // 180 particles for full-screen celebratory flood
+      const count = window.innerWidth < 600 ? 120 : 190;
+      const types = ['rose_bloom', 'rose_petal', 'flower', 'heart', 'gold_spark', 'glitter_trail'];
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        // Speeds ranging from gentle mid-screen to high-velocity full-screen corner reach
+        const speed = (6 + Math.random() * 26) * speedScale;
+        const type = types[Math.floor(Math.random() * types.length)];
+        const size = (type === 'rose_bloom' ? 22 : type === 'gold_spark' ? 7 : 15) + Math.random() * 12;
+
+        this.particles.push({
+          type: type,
+          x: originX + (Math.random() - 0.5) * 40,
+          y: originY + (Math.random() - 0.5) * 40,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (Math.random() * 4), // slight lift
+          drag: 0.962 + Math.random() * 0.018, // smooth glide to screen edges
+          gravity: 0.08,
+          size: size,
+          rot: Math.random() * Math.PI * 2,
+          vrot: (Math.random() - 0.5) * 0.12,
+          pitch: Math.random() * Math.PI * 2,
+          vpitch: (Math.random() - 0.5) * 0.08,
+          life: 1.0,
+          decay: 0.007 + Math.random() * 0.006, // longer duration (+1s)
+          color: ['#c1435a', '#ff4d6d', '#e8c27a', '#ffd166', '#ff8fa3', '#fff0f5', '#ff758f'][Math.floor(Math.random() * 7)],
+          trail: []
+        });
       }
-      p.style.left = Math.random() * 100 + '%';
-      p.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
-      p.style.animationDuration = (8 + Math.random() * 9) + 's';
-      p.style.animationDelay   = (Math.random() * 10) + 's';
-      p.style.opacity = 0.35 + Math.random() * 0.45;
-      container.appendChild(p);
+
+      this.animate = this.animate.bind(this);
+      requestAnimationFrame(this.animate);
+    }
+
+    animate() {
+      if (!this.running) return;
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      let aliveCount = 0;
+      const ctx = this.ctx;
+
+      for (let i = 0; i < this.particles.length; i++) {
+        const p = this.particles[i];
+        if (p.life <= 0) continue;
+
+        aliveCount++;
+
+        // Physics
+        p.vx *= p.drag;
+        p.vy = p.vy * p.drag + p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vrot;
+        p.pitch += p.vpitch;
+        p.life -= p.decay;
+
+        // Spark trail for gold & glittering particles
+        if (p.type === 'glitter_trail' || p.type === 'gold_spark') {
+          p.trail.push({ x: p.x, y: p.y, life: p.life });
+          if (p.trail.length > 8) p.trail.shift();
+
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = Math.max(1.2, p.size * 0.35 * p.life);
+          ctx.beginPath();
+          for (let j = 0; j < p.trail.length; j++) {
+            const pt = p.trail[j];
+            if (j === 0) ctx.moveTo(pt.x, pt.y);
+            else ctx.lineTo(pt.x, pt.y);
+          }
+          ctx.stroke();
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.scale(Math.cos(p.pitch), 1);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.max(0, Math.min(1, p.life * 1.2));
+
+        if (p.type === 'rose_bloom') {
+          // Exploding 3D Rose Bloom with multi-layer petals
+          const s = p.size;
+          ctx.fillStyle = '#800f2f';
+          ctx.beginPath();
+          ctx.arc(0, 0, s * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#c1435a';
+          ctx.beginPath();
+          ctx.arc(-s * 0.1, -s * 0.1, s * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#ff758f';
+          ctx.beginPath();
+          ctx.arc(-s * 0.18, -s * 0.18, s * 0.22, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.type === 'rose_petal') {
+          const s = p.size;
+          const grad = ctx.createLinearGradient(-s*0.6, -s*0.3, s*0.6, s*0.3);
+          grad.addColorStop(0, '#ff4d6d');
+          grad.addColorStop(1, '#800f2f');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, s * 0.75, s * 0.45, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.type === 'heart') {
+          const s = p.size * 0.55;
+          const grad = ctx.createRadialGradient(-s*0.2, -s*0.2, 0, 0, 0, s*1.3);
+          grad.addColorStop(0, '#ff758f');
+          grad.addColorStop(0.6, '#c9184a');
+          grad.addColorStop(1, '#590d22');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(0, s * 0.3);
+          ctx.bezierCurveTo(-s, -s * 0.6, -s * 1.1, s * 0.3, 0, s * 1.2);
+          ctx.bezierCurveTo(s * 1.1, s * 0.3, s, -s * 0.6, 0, s * 0.3);
+          ctx.fill();
+        } else if (p.type === 'flower') {
+          const r = p.size * 0.45;
+          ctx.fillStyle = '#ffccd5';
+          for (let k = 0; k < 5; k++) {
+            ctx.beginPath();
+            ctx.ellipse(0, -r, r * 0.4, r * 0.65, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.rotate((Math.PI * 2) / 5);
+          }
+          ctx.fillStyle = '#ffd166';
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Gold sparkle
+          ctx.fillStyle = '#ffd166';
+          ctx.shadowColor = '#e8c27a';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size * 0.35, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.restore();
+      }
+
+      if (aliveCount > 0) {
+        requestAnimationFrame(this.animate);
+      } else {
+        this.running = false;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    }
+
+    stop() {
+      this.running = false;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
   }
-  spawnPetals(document.getElementById('gatePetals'),  24);
-  spawnPetals(document.getElementById('boardPetals'), 18);
 
-  // ── Scroll-reveal for scrapbook cards ─────────────────────────
-  var revealObserver = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('reveal');
-        revealObserver.unobserve(entry.target);
+  // ================================================================
+  // 3. SCRAPBOOK FALLING PARTICLES ENGINE
+  // ================================================================
+  class ScrapbookParticleEngine {
+    constructor(canvas, container) {
+      this.canvas = canvas;
+      this.container = container;
+      this.ctx = canvas.getContext('2d');
+      this.particles = [];
+      this.running = false;
+      this.init();
+    }
+
+    init() {
+      this.resize();
+      window.addEventListener('resize', () => this.resize());
+      const count = 28;
+      for (let i = 0; i < count; i++) {
+        this.particles.push({
+          x: Math.random() * this.canvas.width,
+          y: Math.random() * this.canvas.height,
+          size: 8 + Math.random() * 14,
+          vy: 0.4 + Math.random() * 0.7,
+          swayFreq: 0.001 + Math.random() * 0.002,
+          swayAmp: 25 + Math.random() * 35,
+          swayPhase: Math.random() * Math.PI * 2,
+          rot: Math.random() * Math.PI * 2,
+          vrot: (Math.random() - 0.5) * 0.02,
+          pitch: Math.random() * Math.PI * 2,
+          vpitch: (Math.random() - 0.5) * 0.02,
+          opacity: 0.15 + Math.random() * 0.25,
+          type: Math.random() < 0.6 ? 'petal' : Math.random() < 0.85 ? 'sparkle' : 'heart'
+        });
       }
+    }
+
+    resize() {
+      if (!this.container) return;
+      this.canvas.width = this.container.offsetWidth || window.innerWidth;
+      this.canvas.height = this.container.offsetHeight || window.innerHeight;
+    }
+
+    start() {
+      this.running = true;
+      this.resize();
+      this.animate = this.animate.bind(this);
+      requestAnimationFrame(this.animate);
+    }
+
+    animate(timestamp) {
+      if (!this.running) return;
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      const ctx = this.ctx;
+      for (let i = 0; i < this.particles.length; i++) {
+        const p = this.particles[i];
+        p.y += p.vy;
+        p.x += Math.sin(timestamp * p.swayFreq + p.swayPhase) * 0.5;
+        p.rot += p.vrot;
+        p.pitch += p.vpitch;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.scale(Math.cos(p.pitch), 1);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = p.opacity;
+
+        if (p.type === 'petal') {
+          ctx.fillStyle = '#e2a3ae';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.size * 0.6, p.size * 0.35, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.type === 'heart') {
+          const s = p.size * 0.4;
+          ctx.fillStyle = '#f6dde2';
+          ctx.beginPath();
+          ctx.moveTo(0, s * 0.3);
+          ctx.bezierCurveTo(-s, -s * 0.6, -s * 1.1, s * 0.3, 0, s * 1.2);
+          ctx.bezierCurveTo(s * 1.1, s * 0.3, s, -s * 0.6, 0, s * 0.3);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = '#e8c27a';
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size * 0.25, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+
+        if (p.y > this.canvas.height + 30) {
+          p.y = -20;
+          p.x = Math.random() * this.canvas.width;
+        }
+      }
+
+      requestAnimationFrame(this.animate);
+    }
+
+    stop() {
+      this.running = false;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+  }
+
+  // ================================================================
+  // 4. CONTENT POPULATION
+  // ================================================================
+  function populateContent() {
+    const c = getContent();
+    USER_PIN = c.userPasscode || '2808';
+
+    // Entry
+    if (c.entryEyebrow) document.getElementById('entryEyebrow').textContent = c.entryEyebrow;
+    document.getElementById('entryFrom').textContent = 'From, ' + (c.lockFrom || 'Your Name');
+    document.getElementById('entryTo').textContent = 'For ' + (c.lockTo || 'My Love');
+    if (c.entrySubtitle) document.getElementById('entrySubtitle').textContent = c.entrySubtitle;
+
+    // Hero
+    if (c.heroLabel) document.getElementById('heroLabel').textContent = c.heroLabel;
+    if (c.heroHeadline) document.getElementById('heroHeadline').textContent = c.heroHeadline;
+    if (c.heroSubtitle) document.getElementById('heroSubtitle').textContent = c.heroSubtitle;
+
+    // Dictionary cards
+    if (c.loveDef) document.getElementById('loveDef').textContent = c.loveDef;
+    if (c.usDef) document.getElementById('usDef').textContent = c.usDef;
+
+    // Message
+    if (c.messageCard) document.getElementById('msgCard').textContent = c.messageCard;
+
+    // Quotes
+    if (c.quote1) document.getElementById('quote1').textContent = '\u201C' + c.quote1 + '\u201D';
+    if (c.quote2) document.getElementById('quote2').textContent = '\u201C' + c.quote2 + '\u201D';
+
+    // Pink tags
+    if (c.pinkTag1) document.getElementById('pinkTag1').textContent = c.pinkTag1;
+    if (c.pinkTag2) document.getElementById('pinkTag2').textContent = c.pinkTag2;
+    if (c.pinkTag3) document.getElementById('pinkTag3').textContent = c.pinkTag3;
+    if (c.pinkTag3Sub) document.getElementById('pinkTag3Sub').textContent = c.pinkTag3Sub;
+
+    // Love letter
+    if (c.loveLetterBody) document.getElementById('loveLetterBody').textContent = c.loveLetterBody;
+    if (c.loveLetterSignature) document.getElementById('loveLetterSig').textContent = c.loveLetterSignature;
+
+    // Finale
+    if (c.finaleLabel) document.getElementById('finaleLabel').textContent = c.finaleLabel;
+    if (c.finaleHeadline) document.getElementById('finaleHeadline').textContent = c.finaleHeadline;
+    if (c.finaleMessage) document.getElementById('finaleMsg').textContent = c.finaleMessage;
+
+    // Photos
+    if (c.photos) {
+      c.photos.forEach(function(photo, i) {
+        const slot = document.getElementById('photoSlot' + i);
+        if (!slot) return;
+        const frame = slot.querySelector('.photo-card__frame');
+        const cap = slot.querySelector('.photo-card__caption');
+
+        if (cap && photo.caption) cap.textContent = photo.caption;
+        if (frame && photo.url) {
+          frame.innerHTML = '<img src="' + escapeAttr(photo.url) + '" alt="Memory photo ' + (i+1) + '" loading="lazy">';
+          slot.classList.add('photo-card--filled');
+        }
+      });
+    }
+
+    // Badges
+    const badgesList = c.badges || ['cutie pie', 'favorite person', 'forever ∞', 'always yours', 'my heart', 'the one'];
+    const badgesRow = document.getElementById('badgesRow');
+    badgesRow.innerHTML = '';
+    badgesList.forEach(function(label, i) {
+      const rot = ((i % 3 === 0 ? -2 : i % 3 === 1 ? 2.5 : -1.2)).toFixed(1);
+      const badge = document.createElement('div');
+      badge.className = 'badge';
+      badge.style.setProperty('--badge-rot', rot + 'deg');
+      badge.textContent = label;
+      badgesRow.appendChild(badge);
     });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.board .card').forEach(function (card, i) {
-    card.style.animationDelay = (i % 6) * 0.08 + 's';
-    revealObserver.observe(card);
+
+    // Hint text
+    if (c.hintText) pinHint.textContent = c.hintText;
+  }
+
+  function escapeAttr(s) { return (s||'').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+  // ================================================================
+  // 5. NAVIGATION & KEYPAD INTERACTIONS
+  // ================================================================
+
+  // Entry -> PIN transition
+  document.getElementById('envelopeTap').addEventListener('click', function() {
+    entry.classList.add('screen--leaving');
+    setTimeout(function() {
+      entry.style.display = 'none';
+      pinScreen.style.display = 'flex';
+      pinScreen.classList.add('screen--entering');
+      if (atmosphericEngine) atmosphericEngine.activeScreen = 'pin';
+      setTimeout(() => pinScreen.classList.remove('screen--entering'), 500);
+    }, 500);
   });
 
-  // ── PIN keypad — dual passcode ────────────────────────────────
-  var USER_PASS = c.userPasscode;
-  var entered   = '';
-  var dotsEl    = document.getElementById('dots');
-  var hint      = document.getElementById('hint');
-  var gate      = document.getElementById('gate');
-  var bloom     = document.getElementById('bloom');
-  var burst     = document.getElementById('roseBurst');
-  var board     = document.getElementById('board');
+  entry.addEventListener('click', function(e) {
+    if (e.target.closest('#envelopeTap')) return;
+    document.getElementById('envelopeTap').click();
+  });
 
-  function renderDots() {
-    Array.from(dotsEl.children).forEach(function (d, i) {
-      d.classList.toggle('filled', i < entered.length);
+  // PIN Keypad
+  function renderHearts() {
+    Array.from(pinHearts).forEach(function(h, i) {
+      if (i < entered.length) {
+        h.classList.add('pin__heart-indicator--filled');
+        h.querySelector('path').setAttribute('fill', '#E8C27A');
+      } else {
+        h.classList.remove('pin__heart-indicator--filled');
+        h.querySelector('path').setAttribute('fill', 'none');
+      }
     });
   }
 
   function wrongPin() {
-    dotsEl.classList.remove('shake');
-    void dotsEl.offsetWidth;
-    dotsEl.classList.add('shake');
-    hint.classList.add('show');
-    setTimeout(function () { entered = ''; renderDots(); }, 350);
+    Array.from(pinHearts).forEach(h => h.style.opacity = '0.4');
+    const heartsRow = document.getElementById('pinHearts');
+    heartsRow.classList.add('pin__hearts--shake');
+    pinHint.classList.add('pin__hint--show');
+    setTimeout(function() {
+      entered = '';
+      renderHearts();
+      Array.from(pinHearts).forEach(h => h.style.opacity = '1');
+      heartsRow.classList.remove('pin__hearts--shake');
+    }, 400);
+    setTimeout(function() {
+      pinHint.classList.remove('pin__hint--show');
+    }, 3000);
   }
 
-  document.getElementById('keypad').addEventListener('click', function (e) {
-    var btn = e.target.closest('.key');
+  function createParticleBurst(btn) {
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    for (let i = 0; i < 5; i++) {
+      const p = document.createElement('div');
+      p.className = 'pin__particle';
+      const angle = (Math.PI * 2 * i) / 5 + Math.random() * 0.4;
+      const dist = 20 + Math.random() * 25;
+      p.style.left = cx + 'px';
+      p.style.top = cy + 'px';
+      p.style.setProperty('--px', Math.cos(angle) * dist + 'px');
+      p.style.setProperty('--py', Math.sin(angle) * dist + 'px');
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 550);
+    }
+  }
+
+  pinKeypad.addEventListener('click', function(e) {
+    const btn = e.target.closest('.pin__key');
     if (!btn) return;
-    var k = btn.dataset.k;
+    const k = btn.dataset.k;
+
     if (k === 'back') {
       entered = entered.slice(0, -1);
-      renderDots();
+      renderHearts();
       return;
     }
     if (entered.length >= 4) return;
+
+    btn.classList.add('pin__key--pressed');
+    createParticleBurst(btn);
+    setTimeout(() => btn.classList.remove('pin__key--pressed'), 180);
+
     entered += k;
-    renderDots();
+    renderHearts();
+
     if (entered.length === 4) {
-      setTimeout(function () {
-        if (entered === ADMIN_PASS) {
-          // → Admin panel
+      setTimeout(function() {
+        if (entered === ADMIN_PIN) {
           sessionStorage.setItem('adminAuth', '1');
-          gate.classList.add('leaving');
-          setTimeout(function () { window.location.href = 'admin.html'; }, 900);
-        } else if (entered === USER_PASS) {
-          // → Scrapbook
-          unlock();
+          pinScreen.classList.add('screen--leaving');
+          setTimeout(() => window.location.href = 'admin.html', 700);
+        } else if (entered === USER_PIN) {
+          startCelebrationTransition();
         } else {
           wrongPin();
         }
-      }, 150);
+      }, 180);
     }
   });
 
-  function unlock() {
-    gate.classList.add('leaving');
-    setTimeout(function () { gate.style.display = 'none'; showBloom(); }, 900);
+  // Keyboard support
+  document.addEventListener('keydown', function(e) {
+    if (pinScreen.style.display === 'none') return;
+    if (e.key >= '0' && e.key <= '9') {
+      const btn = pinKeypad.querySelector('[data-k="' + e.key + '"]');
+      if (btn) btn.click();
+    } else if (e.key === 'Backspace') {
+      const btn = pinKeypad.querySelector('[data-k="back"]');
+      if (btn) btn.click();
+    }
+  });
+
+  // ================================================================
+  // 6. CINEMATIC UNLOCK & CELEBRATION BURST TRANSITION
+  // ================================================================
+  let burstEngine = null;
+
+  function startCelebrationTransition() {
+    // 1. PIN Screen begins leaving
+    pinScreen.classList.add('screen--leaving');
+
+    setTimeout(function() {
+      pinScreen.style.display = 'none';
+
+      // Stop atmospheric engine to free performance
+      if (atmosphericEngine) atmosphericEngine.stop();
+
+      // 2. Activate Transition Overlay with Pink Atmosphere
+      transOverlay.style.display = 'flex';
+      void transOverlay.offsetWidth;
+      transOverlay.classList.add('active');
+
+      // 3. Trigger Celebratory Firework Cracker Burst from screen center
+      if (!burstEngine) burstEngine = new BurstEngine(burstCanvas);
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      burstEngine.explode(cx, cy);
+
+      // 4. Letter card floats into view
+      setTimeout(function() {
+        transLetterCard.classList.add('show');
+      }, 600);
+
+      // 5. Letter wax seal illuminates and flap flips open
+      setTimeout(function() {
+        transEnvelope.classList.add('opened');
+      }, 1400);
+
+      // 6. Cinematic Zoom-through to Scrapbook (extended by +1s for full-screen celebration)
+      setTimeout(function() {
+        transOverlay.classList.add('transition-overlay--zoomout');
+
+        setTimeout(function() {
+          transOverlay.style.display = 'none';
+          if (burstEngine) burstEngine.stop();
+          showScrapbook();
+        }, 900);
+      }, 3100);
+
+    }, 450);
   }
 
-  function showBloom() {
-    var n = 24;
-    for (var i = 0; i < n; i++) {
-      var r = document.createElement('div');
-      r.className = 'rose'; r.textContent = '🌹';
-      var angle = (Math.PI * 2 * i) / n + Math.random() * 0.25;
-      var dist  = 100 + Math.random() * 150;
-      r.style.fontSize = (34 + Math.random() * 14) + 'px';
-      r.style.setProperty('--x', Math.cos(angle) * dist + 'px');
-      r.style.setProperty('--y', Math.sin(angle) * dist + 'px');
-      r.style.setProperty('--r', (Math.random() * 60 - 30) + 'deg');
-      r.style.setProperty('--d', (Math.random() * 0.4) + 's');
-      burst.appendChild(r);
+  // ================================================================
+  // 7. SCRAPBOOK PRESENTATION & SCROLL EFFECTS
+  // ================================================================
+  let scrapbookParticleEngine = null;
+
+  function showScrapbook() {
+    scrapbook.style.display = 'block';
+    document.body.classList.add('body--light');
+    window.scrollTo(0, 0);
+
+    setTimeout(function() {
+      scrapbook.classList.add('scrapbook--visible');
+    }, 100);
+
+    // Initialize subtle falling particles on scrapbook
+    if (!scrapbookParticleEngine) {
+      scrapbookParticleEngine = new ScrapbookParticleEngine(scrapbookCanvas, scrapbook);
     }
-    var m = 16;
-    for (var i = 0; i < m; i++) {
-      var r = document.createElement('div');
-      r.className = 'rose'; r.textContent = '🌹';
-      var angle = (Math.PI * 2 * i) / m + Math.random() * 0.3 + 0.15;
-      var dist  = 30 + Math.random() * 60;
-      r.style.fontSize = (18 + Math.random() * 10) + 'px';
-      r.style.setProperty('--x', Math.cos(angle) * dist + 'px');
-      r.style.setProperty('--y', Math.sin(angle) * dist + 'px');
-      r.style.setProperty('--r', (Math.random() * 50 - 25) + 'deg');
-      r.style.setProperty('--d', (Math.random() * 0.25) + 's');
-      burst.appendChild(r);
-    }
-    for (var i = 0; i < 12; i++) {
-      var p = document.createElement('div');
-      p.className = 'rose'; p.textContent = '🌸';
-      var angle = Math.random() * Math.PI * 2;
-      var dist  = 160 + Math.random() * 90;
-      p.style.fontSize = (16 + Math.random() * 8) + 'px';
-      p.style.opacity  = '.8';
-      p.style.setProperty('--x', Math.cos(angle) * dist + 'px');
-      p.style.setProperty('--y', Math.sin(angle) * dist + 'px');
-      p.style.setProperty('--r', (Math.random() * 80 - 40) + 'deg');
-      p.style.setProperty('--d', (0.2 + Math.random() * 0.5) + 's');
-      burst.appendChild(p);
-    }
-    bloom.classList.add('active');
-    setTimeout(function () { board.classList.add('show'); window.scrollTo(0, 0); }, 2400);
+    scrapbookParticleEngine.start();
+
+    // Scroll reveal observer
+    initScrollReveal();
+    initPhotoColorTransition();
+    initCursorTrail();
   }
-});
+
+  function initScrollReveal() {
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.card-item, .love-letter__inner, .finale__headline, .finale__message, .finale__roses, .finale__label').forEach(function(el) {
+      observer.observe(el);
+    });
+  }
+
+  function initPhotoColorTransition() {
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('photo-card--colorized');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.35 });
+
+    document.querySelectorAll('.photo-card').forEach(function(el) {
+      observer.observe(el);
+    });
+  }
+
+  // ================================================================
+  // 8. TINY HEARTS CURSOR TRAIL (DESKTOP)
+  // ================================================================
+  function initCursorTrail() {
+    if ('ontouchstart' in window) return;
+    const canvas = document.getElementById('cursorTrail');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const MAX_PARTICLES = 75;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    canvas.style.display = 'block';
+
+    let lastX = 0, lastY = 0;
+    let throttle = false;
+
+    document.addEventListener('mousemove', function(e) {
+      if (throttle) return;
+      throttle = true;
+      setTimeout(() => throttle = false, 20);
+
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      if (Math.abs(dx) + Math.abs(dy) < 3) return;
+      lastX = e.clientX;
+      lastY = e.clientY;
+
+      const count = 1 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < count; i++) {
+        if (particles.length >= MAX_PARTICLES) particles.shift();
+        const isHeart = Math.random() < 0.8;
+        particles.push({
+          x: e.clientX + (Math.random() - 0.5) * 16,
+          y: e.clientY + (Math.random() - 0.5) * 16,
+          type: isHeart ? 'heart' : 'sparkle',
+          size: isHeart ? (8 + Math.random() * 10) : (4 + Math.random() * 6),
+          life: 800 + Math.random() * 400,
+          born: performance.now(),
+          vx: (Math.random() - 0.5) * 0.7,
+          vy: -0.6 - Math.random() * 0.9, // float gently upwards
+          rot: Math.random() * Math.PI * 2,
+          vrot: (Math.random() - 0.5) * 0.05,
+          color: isHeart
+            ? ['#ff4d6d', '#ff758f', '#c9184a', '#ff8fa3', '#e8c27a'][Math.floor(Math.random() * 5)]
+            : '#ffe082'
+        });
+      }
+    });
+
+    function draw(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(function(p) {
+        const age = t - p.born;
+        if (age > p.life) return false;
+        const progress = age / p.life;
+        const alpha = (1 - progress) * 0.9;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vrot;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.max(0, alpha);
+
+        if (p.type === 'heart') {
+          const s = p.size * (1 - progress * 0.3) * 0.45;
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.moveTo(0, s * 0.3);
+          ctx.bezierCurveTo(-s, -s * 0.6, -s * 1.1, s * 0.3, 0, s * 1.2);
+          ctx.bezierCurveTo(s * 1.1, s * 0.3, s, -s * 0.6, 0, s * 0.3);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        } else {
+          const s = p.size * (1 - progress * 0.4);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = '#e8c27a';
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.restore();
+        return true;
+      });
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+
+  // ================================================================
+  // 9. INITIALIZATION
+  // ================================================================
+  document.addEventListener('DOMContentLoaded', function() {
+    // Start 3D atmospheric particle canvas
+    atmosphericEngine = new AtmosphericEngine(particleCanvas);
+
+    // Start tiny hearts cursor trail
+    initCursorTrail();
+
+    // Load content from server
+    if (typeof loadContentFromServer === 'function') {
+      loadContentFromServer().then(function() {
+        populateContent();
+      }).catch(function() {
+        populateContent();
+      });
+    } else {
+      populateContent();
+    }
+  });
+
+})();
 </script>
 </body>
 </html>

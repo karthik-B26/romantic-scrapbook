@@ -1,101 +1,116 @@
-/**
- * content.js — Birthday Site Content Store
- *
- * Two ways to edit content:
- *   1. Open admin.html (passcode: 1234) and use the UI editor.
- *   2. Edit the DEFAULT_CONTENT object below directly and push to Git.
- *
- * Admin-panel changes are saved to localStorage and take priority over
- * the defaults defined here, so your Git source stays clean.
- */
+/* ================================================================
+   Content Manager — Client-side
+   Handles content loading, caching, saving, and resetting.
+   ================================================================ */
 
-const DEFAULT_CONTENT = {
-
-  // ── Lock Screen ───────────────────────────────────────────────────────────
-  lockFrom:  "From, Your Name",
-  lockTo:    "For My Love",
-  hintText:  "that's not quite the date I meant 🌹",
-  bloomText: "for the girl who makes every day feel like this",
-
-  // ── Board Hero ────────────────────────────────────────────────────────────
-  heroLabel:    "Happy Birthday",
-  heroHeadline: "My Love",
-  heroSubtitle: "I put together a little board of us — scroll through it, love. Every piece of it is real.",
-
-  // ── Note Cards ────────────────────────────────────────────────────────────
-  loveDef: "Strong affection arising out of everything you are — your laugh, your patience with me, the way you make ordinary days feel like something worth remembering.",
-  usDef:   "Write a short memory or inside joke here — something only the two of you would understand.",
-
-  // ── Message Card ──────────────────────────────────────────────────────────
-  messageCard: "Wishing you endless reasons to smile, the courage to chase everything you want, and enough happiness to make every day feel worth it. I'm so lucky to love you.",
-
-  // ── Quote Tags ────────────────────────────────────────────────────────────
-  quote1: "She looks just like a dream — the prettiest girl I've ever seen.",
-  quote2: "This girl. This girl. She's the girl.",
-
-  // ── Pink Tags ─────────────────────────────────────────────────────────────
-  pinkTag1:    "cutie pie",
-  pinkTag2:    "favorite person",
-  pinkTag3:    "forever ∞",
-  pinkTag3Sub: "always yours",
-
-  // ── Photos (10 slots) ─────────────────────────────────────────────────────
-  // url: ""  → shows placeholder emoji on the site.
-  // url can be any web URL or a base64 data URI (from the Admin Panel uploader).
+var _defaultContent = {
+  lockFrom: 'Your Name',
+  lockTo: 'My Love',
+  entryEyebrow: 'A LETTER, JUST FOR YOU',
+  entrySubtitle: 'you know the date.',
+  hintText: 'not quite \u2014 think about it.',
+  bloomText: 'for the girl who makes every day feel like this',
+  heroLabel: 'Happy Birthday',
+  heroHeadline: 'My Love',
+  heroSubtitle: 'I put together a little board of us \u2014 scroll through it, love. Every piece of it is real.',
+  loveDef: 'Strong affection arising out of everything you are \u2014 your laugh, your patience with me, the way you make ordinary days feel like something worth remembering.',
+  usDef: 'Two people who chose each other and keep choosing each other \u2014 through ordinary days, late-night talks, and everything in between.',
+  loveLetterBody: 'Every day with you teaches me something new about love \u2014 that it is not always grand gestures, but quiet mornings, shared laughter, and the comfort of knowing someone truly sees you. You are my favorite person, my safest place, and the most beautiful part of my story. I do not need a special day to tell you this, but I will take any excuse to remind you: loving you is the easiest, most extraordinary thing I have ever done.',
+  loveLetterSignature: 'Forever yours',
+  messageCard: 'Wishing you endless reasons to smile, the courage to chase everything you want, and enough happiness to make every day feel worth it. I am so lucky to love you.',
+  quote1: 'She looks just like a dream \u2014 the prettiest girl I have ever seen.',
+  quote2: 'This girl. This girl. She is the girl.',
+  badges: ['cutie pie', 'favorite person', 'forever \u221E', 'always yours', 'my heart', 'the one'],
   photos: [
-    { url: "", caption: "the beginning"  },
-    { url: "", caption: "that day"       },
-    { url: "", caption: "just us"        },
-    { url: "", caption: "forever, please"},
-    { url: "", caption: "my favorite one"},
-    { url: "", caption: "us, always"     },
-    { url: "", caption: "silly face"     },
-    { url: "", caption: "golden hour"    },
-    { url: "", caption: "cozy nights"    },
-    { url: "", caption: "my whole heart" },
+    { url: '', caption: 'the beginning' },
+    { url: '', caption: 'that day' },
+    { url: '', caption: 'just us' },
+    { url: '', caption: 'forever, please' },
+    { url: '', caption: 'my favorite one' },
+    { url: '', caption: 'us, always' },
+    { url: '', caption: 'silly face' },
+    { url: '', caption: 'golden hour' },
+    { url: '', caption: 'cozy nights' },
+    { url: '', caption: 'my whole heart' }
   ],
-
-  // ── Finale ────────────────────────────────────────────────────────────────
-  finaleLabel:    "To many more",
-  finaleHeadline: "Happy Birthday, my love",
-  finaleMessage:  "Write your closing birthday message here — the thing you most want her to know today.",
-
-  // ── User Passcode ─────────────────────────────────────────────────────────
-  // The visitor's PIN to unlock the scrapbook. Change via Admin Panel or edit here.
-  userPasscode: "2808",
+  finaleLabel: 'To many more',
+  finaleHeadline: 'Happy Birthday, my love',
+  finaleMessage: 'To the one who makes everything brighter \u2014 I hope this year brings you all the magic you deserve. Happy birthday, my love.',
+  userPasscode: '2808'
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-
 /**
- * Returns the active content: localStorage overrides merged on top of defaults.
+ * Get current content (synchronous — from localStorage cache or defaults)
  */
 function getContent() {
   try {
-    const raw = localStorage.getItem('birthdaySiteContent');
-    if (!raw) return _deepClone(DEFAULT_CONTENT);
-    const saved = JSON.parse(raw);
-    const merged = Object.assign({}, DEFAULT_CONTENT, saved);
-    // Merge photos array slot-by-slot so missing slots fall back to defaults
-    merged.photos = DEFAULT_CONTENT.photos.map(function(def, i) {
-      return Object.assign({}, def, (saved.photos || [])[i] || {});
-    });
-    return merged;
+    var cached = localStorage.getItem('scrapbookContent');
+    if (cached) return JSON.parse(cached);
   } catch (e) {
-    return _deepClone(DEFAULT_CONTENT);
+    console.warn('Failed to read cached content:', e);
   }
+  return JSON.parse(JSON.stringify(_defaultContent));
 }
 
-/** Persists a full content object to localStorage. */
+/**
+ * Save content to server and local cache
+ * @param {object} data - The full content object
+ */
 function saveContent(data) {
-  localStorage.setItem('birthdaySiteContent', JSON.stringify(data));
+  // Cache locally first
+  localStorage.setItem('scrapbookContent', JSON.stringify(data));
+
+  // Save to server
+  return fetch('/api/content', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-admin-key': '1234'
+    },
+    body: JSON.stringify(data)
+  }).then(function(r) {
+    if (!r.ok) throw new Error('Save failed');
+    return true;
+  }).catch(function(err) {
+    console.warn('Server save failed (changes saved locally):', err);
+    return false;
+  });
 }
 
-/** Wipes all localStorage overrides, restoring JS defaults. */
+/**
+ * Reset content to defaults
+ */
 function resetContent() {
-  localStorage.removeItem('birthdaySiteContent');
+  localStorage.removeItem('scrapbookContent');
+
+  return fetch('/api/reset', {
+    method: 'POST',
+    headers: { 'x-admin-key': '1234' }
+  }).then(function(r) {
+    if (!r.ok) throw new Error('Reset failed');
+    return true;
+  }).catch(function(err) {
+    console.warn('Server reset failed:', err);
+    return false;
+  });
 }
 
-function _deepClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
+/**
+ * Load content from server and cache it
+ * @returns {Promise<object|null>}
+ */
+function loadContentFromServer() {
+  return fetch('/api/content')
+    .then(function(r) {
+      if (!r.ok) throw new Error('Fetch failed');
+      return r.json();
+    })
+    .then(function(data) {
+      localStorage.setItem('scrapbookContent', JSON.stringify(data));
+      return data;
+    })
+    .catch(function(err) {
+      console.warn('Could not load from server, using cache:', err);
+      return null;
+    });
 }
