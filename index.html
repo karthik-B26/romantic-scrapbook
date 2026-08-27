@@ -374,6 +374,17 @@
 
 </div><!-- #scrapbook -->
 
+<!-- Background Music (plays from 19s upon successful login) -->
+<audio id="bgMusic" src="Baby%20O%20Baby.mp3" preload="auto"></audio>
+
+<!-- Floating Music Player Control -->
+<div id="musicControl" class="music-control" style="display:none;" title="Toggle Music">
+  <div class="music-control__disc">
+    <span class="music-control__icon">🎵</span>
+  </div>
+  <span class="music-control__label">Baby O Baby</span>
+</div>
+
 <!-- Cursor trail canvas (desktop only) -->
 <canvas id="cursorTrail" class="cursor-trail-canvas"></canvas>
 
@@ -1156,23 +1167,47 @@
       void transOverlay.offsetWidth;
       transOverlay.classList.add('active');
 
-      // 3. Trigger Celebratory Firework Cracker Burst from screen center
+      // 3. Play background music from 19s upon successful login!
+      const bgMusic = document.getElementById('bgMusic');
+      const musicControl = document.getElementById('musicControl');
+      if (bgMusic) {
+        try {
+          bgMusic.currentTime = 19;
+          bgMusic.volume = 0.85;
+          bgMusic.play().then(function() {
+            if (musicControl) {
+              musicControl.style.display = 'flex';
+              musicControl.classList.add('playing');
+            }
+          }).catch(function(err) {
+            console.log('Audio autoplay info:', err);
+            if (musicControl) {
+              musicControl.style.display = 'flex';
+              musicControl.classList.add('muted');
+            }
+          });
+        } catch(e) {
+          console.warn('Audio play error:', e);
+        }
+      }
+
+      // 4. Trigger Celebratory Firework Cracker Burst from screen center
       if (!burstEngine) burstEngine = new BurstEngine(burstCanvas);
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
       burstEngine.explode(cx, cy);
 
-      // 4. Letter card floats into view
+      // 5. Letter card floats into view
       setTimeout(function() {
         transLetterCard.classList.add('show');
       }, 600);
 
-      // 5. Letter wax seal illuminates and flap flips open
+      // 6. Letter wax seal illuminates and flap flips open
       setTimeout(function() {
         transEnvelope.classList.add('opened');
       }, 1400);
 
-      // 6. Cinematic Zoom-through to Scrapbook (extended by +1s for full-screen celebration)
+      // 7. Cinematic Zoom-through to Scrapbook (extended by +1s for full-screen celebration)
       setTimeout(function() {
         transOverlay.classList.add('transition-overlay--zoomout');
 
@@ -1352,6 +1387,26 @@
 
     // Start tiny hearts cursor trail
     initCursorTrail();
+
+    // Wire floating music player toggle
+    const musicControl = document.getElementById('musicControl');
+    const bgMusic = document.getElementById('bgMusic');
+    if (musicControl && bgMusic) {
+      musicControl.addEventListener('click', function() {
+        if (bgMusic.paused) {
+          bgMusic.play().then(function() {
+            musicControl.classList.remove('muted');
+            musicControl.classList.add('playing');
+            musicControl.querySelector('.music-control__icon').textContent = '🎵';
+          }).catch(function(e) { console.warn(e); });
+        } else {
+          bgMusic.pause();
+          musicControl.classList.remove('playing');
+          musicControl.classList.add('muted');
+          musicControl.querySelector('.music-control__icon').textContent = '🔇';
+        }
+      });
+    }
 
     // Load content from server
     if (typeof loadContentFromServer === 'function') {

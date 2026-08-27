@@ -1100,6 +1100,60 @@ img { max-width: 100%; display: block; }
 .finale__rose-item:nth-child(5) { animation-delay: 0.7s; }
 
 /* ================================================================
+   FLOATING MUSIC PLAYER
+   ================================================================ */
+.music-control {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 8px;
+  background: rgba(253, 251, 247, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 151, 59, 0.35);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 20px rgba(58, 30, 20, 0.16);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s ease;
+  animation: fadeSlideUp 0.6s var(--ease-out-soft) forwards;
+}
+.music-control:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 10px 28px rgba(58, 30, 20, 0.24);
+}
+.music-control__disc {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--rose-primary), var(--seal-maroon));
+  display: grid;
+  place-items: center;
+  color: var(--cream-text);
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(122, 33, 48, 0.3);
+}
+.music-control.playing .music-control__disc {
+  animation: spinDisc 3.5s linear infinite;
+}
+@keyframes spinDisc {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.music-control__label {
+  font-family: var(--font-accent-script);
+  font-size: 1.2rem;
+  color: var(--ink-900);
+}
+.music-control.muted .music-control__label {
+  color: var(--ink-soft);
+  opacity: 0.7;
+}
+
+/* ================================================================
    CURSOR TRAIL CANVAS
    ================================================================ */
 .cursor-trail-canvas {
