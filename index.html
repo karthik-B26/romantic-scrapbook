@@ -148,12 +148,44 @@
   <!-- Subtle falling rose petals & sparkles canvas for scrapbook -->
   <canvas id="scrapbookCanvas" class="scrapbook-particle-canvas"></canvas>
 
+  <!-- One-time celebratory rose shower canvas (35-40 roses falling down once upon transition) -->
+  <canvas id="oneTimeRoseCanvas" class="one-time-rose-canvas"></canvas>
+
   <!-- ── Hero Section ── -->
   <section class="hero">
-    <p class="hero__label" id="heroLabel">Happy Birthday</p>
-    <h1 class="hero__title" id="heroHeadline">My Love</h1>
-    <p class="hero__subtitle" id="heroSubtitle">I put together a little board of us — scroll through it, love. Every piece of it is real.</p>
-    <p class="hero__scroll">SCROLL ↓</p>
+    <!-- Handcrafted Corner Accents & Stamps -->
+    <div class="hero__accent hero__accent--top-left">
+      <div class="hero__sticker-bow">🎀</div>
+      <div class="hero__stamp">
+        <span class="hero__stamp-inner">SPECIAL DELIVERY 💌</span>
+      </div>
+    </div>
+
+    <div class="hero__accent hero__accent--top-right">
+      <div class="washi-tape washi-tape--gold"></div>
+      <div class="hero__sticker-flower">🌸</div>
+      <div class="hero__mini-tag">pure magic ✨</div>
+    </div>
+
+    <div class="hero__accent hero__accent--bottom-left">
+      <div class="hero__sticky-note">
+        <span>crafted with love</span>
+        <small>for my favorite girl 💖</small>
+      </div>
+    </div>
+
+    <div class="hero__accent hero__accent--bottom-right">
+      <div class="hero__sticker-star">⭐</div>
+      <div class="hero__sparkle-badge">forever ∞</div>
+    </div>
+
+    <div class="hero__content-wrap">
+      <div class="washi-tape washi-tape--hero-top"></div>
+      <p class="hero__label" id="heroLabel">Happy Birthday</p>
+      <h1 class="hero__title" id="heroHeadline">My Love</h1>
+      <p class="hero__subtitle" id="heroSubtitle">I put together a little board of us — scroll through it, love. Every piece of it is real.</p>
+      <p class="hero__scroll">SCROLL ↓</p>
+    </div>
   </section>
 
   <!-- ── Cards & Masonry Section ── -->
@@ -337,7 +369,76 @@
         <div class="sticker-wrap">🍓</div>
       </div>
 
-      <!-- Pink Tag 3: forever ∞ -->
+      <!-- Photo 11: sweet memories -->
+      <div id="photoSlot10" class="card-item photo-card" style="--card-rot: 2.2deg;">
+        <div class="washi-tape washi-tape--gold"></div>
+        <div class="photo-card__frame">🌹 Add Photo 11</div>
+        <div class="photo-card__caption" data-caption="10">sweet memories</div>
+      </div>
+
+      <!-- Sticker: Cherry -->
+      <div class="card-item sticker-card sticker--cherry" style="--card-rot: -2deg;">
+        <div class="washi-tape"></div>
+        <div class="sticker-wrap">🍒</div>
+      </div>
+
+      <!-- Handwritten Note: Little Moments -->
+      <div class="card-item message-card" style="--card-rot: -1.5deg; background:#fdfcf7;">
+        <div class="washi-tape"></div>
+        <p class="message-card__text">"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."</p>
+      </div>
+
+      <!-- Photo 12: laughter & smiles -->
+      <div id="photoSlot11" class="card-item photo-card" style="--card-rot: -2.4deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 12</div>
+        <div class="photo-card__caption" data-caption="11">laughter & smiles</div>
+      </div>
+
+      <!-- Quote Tag 3 -->
+      <div class="card-item quote-tag" style="--card-rot: 2deg;">
+        <p class="quote-tag__text">"You make ordinary life feel like poetry."</p>
+      </div>
+
+      <!-- Photo 13: adventures with you -->
+      <div id="photoSlot12" class="card-item photo-card" style="--card-rot: 1.6deg;">
+        <div class="washi-tape washi-tape--gold"></div>
+        <div class="photo-card__frame">🌸 Add Photo 13</div>
+        <div class="photo-card__caption" data-caption="12">adventures with you</div>
+      </div>
+
+      <!-- Sticker: Sakura Blossom -->
+      <div class="card-item sticker-card sticker--blossom" style="--card-rot: -1.8deg;">
+        <div class="sticker-wrap">🌸</div>
+      </div>
+
+      <!-- Pink Tag 3: my favorite view -->
+      <div class="card-item pink-tag" style="--card-rot: 2.2deg;">
+        <div class="hand">my favorite view</div>
+        <div class="sub">is always you</div>
+      </div>
+
+      <!-- Photo 14: my sunshine -->
+      <div id="photoSlot13" class="card-item photo-card" style="--card-rot: -1.8deg;">
+        <div class="washi-tape"></div>
+        <div class="photo-card__frame">🌹 Add Photo 14</div>
+        <div class="photo-card__caption" data-caption="13">my sunshine</div>
+      </div>
+
+      <!-- Sticker: Sparkle Heart -->
+      <div class="card-item sticker-card sticker--sparkheart" style="--card-rot: 2.5deg;">
+        <div class="washi-tape"></div>
+        <div class="sticker-wrap">💖</div>
+      </div>
+
+      <!-- Photo 15: here's to forever -->
+      <div id="photoSlot14" class="card-item photo-card" style="--card-rot: 2deg;">
+        <div class="washi-tape washi-tape--gold"></div>
+        <div class="photo-card__frame">🌸 Add Photo 15</div>
+        <div class="photo-card__caption" data-caption="14">here's to forever</div>
+      </div>
+
+      <!-- Pink Tag 4: forever ∞ -->
       <div class="card-item pink-tag" style="--card-rot: -2deg;">
         <div class="washi-tape washi-tape--gold"></div>
         <div class="hand" id="pinkTag3">forever ∞</div>
@@ -955,6 +1056,151 @@
   }
 
   // ================================================================
+  // 3B. ONE-TIME CELEBRATORY ROSE SHOWER (35-40 ROSES DOWN ONCE)
+  // ================================================================
+  class OneTimeRoseShowerEngine {
+    constructor(canvas) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.roses = [];
+      this.running = false;
+      this.init();
+    }
+
+    init() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+      this.canvas.style.display = 'block';
+      this.roses = [];
+      this.running = true;
+
+      // 38 detailed roses cascading downwards once
+      const count = 38;
+      for (let i = 0; i < count; i++) {
+        // Stagger vertical start above screen so they cascade over ~4 seconds
+        const startY = -40 - Math.random() * (window.innerHeight * 0.8 + 260);
+        const startX = Math.random() * window.innerWidth;
+        const size = 32 + Math.random() * 20;
+        const z = 0.55 + Math.random() * 0.85;
+
+        this.roses.push({
+          x: startX,
+          y: startY,
+          size: size * z,
+          z: z,
+          vy: (2.5 + Math.random() * 2.6) * (0.8 + z * 0.4),
+          vx: (Math.random() - 0.5) * 0.8,
+          swayFreq: 0.0015 + Math.random() * 0.002,
+          swayAmp: 25 + Math.random() * 40,
+          swayPhase: Math.random() * Math.PI * 2,
+          rot: Math.random() * Math.PI * 2,
+          vrot: (Math.random() - 0.5) * 0.035,
+          pitch: Math.random() * Math.PI * 2,
+          vpitch: (Math.random() - 0.5) * 0.025,
+          opacity: 0.88 + Math.random() * 0.12,
+          color: ['#800f2f', '#a4133c', '#c9184a', '#ff4d6d'][Math.floor(Math.random() * 4)],
+          done: false
+        });
+      }
+
+      this.animate = this.animate.bind(this);
+      requestAnimationFrame(this.animate);
+    }
+
+    animate(timestamp) {
+      if (!this.running) return;
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      let activeCount = 0;
+      const ctx = this.ctx;
+
+      for (let i = 0; i < this.roses.length; i++) {
+        const r = this.roses[i];
+        if (r.done) continue;
+
+        activeCount++;
+
+        // Physics
+        r.y += r.vy;
+        r.x += r.vx + Math.sin(timestamp * r.swayFreq + r.swayPhase) * 0.8;
+        r.rot += r.vrot;
+        r.pitch += r.vpitch;
+
+        ctx.save();
+        ctx.translate(r.x, r.y);
+        ctx.scale(Math.cos(r.pitch), 1);
+        ctx.rotate(r.rot);
+        ctx.globalAlpha = r.opacity;
+
+        // Draw Beautiful Full Rose with Leaves
+        const s = r.size * 0.5;
+
+        // Green side leaves
+        ctx.fillStyle = '#2d6a4f';
+        ctx.beginPath();
+        ctx.ellipse(-s * 0.7, s * 0.2, s * 0.35, s * 0.18, -0.4, 0, Math.PI * 2);
+        ctx.ellipse(s * 0.7, s * 0.2, s * 0.35, s * 0.18, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#40916c';
+        ctx.beginPath();
+        ctx.ellipse(-s * 0.7, s * 0.2, s * 0.25, s * 0.1, -0.4, 0, Math.PI * 2);
+        ctx.ellipse(s * 0.7, s * 0.2, s * 0.25, s * 0.1, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Outer petals
+        const gradOuter = ctx.createRadialGradient(0, 0, s * 0.2, 0, 0, s * 1.1);
+        gradOuter.addColorStop(0, '#ff4d6d');
+        gradOuter.addColorStop(0.6, r.color);
+        gradOuter.addColorStop(1, '#590d22');
+        ctx.fillStyle = gradOuter;
+
+        for (let p = 0; p < 6; p++) {
+          ctx.beginPath();
+          ctx.ellipse(0, -s * 0.5, s * 0.45, s * 0.65, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.rotate((Math.PI * 2) / 6);
+        }
+
+        // Inner velvet bloom
+        const gradInner = ctx.createRadialGradient(-s * 0.1, -s * 0.1, 0, 0, 0, s * 0.6);
+        gradInner.addColorStop(0, '#ff758f');
+        gradInner.addColorStop(0.7, '#c9184a');
+        gradInner.addColorStop(1, '#800f2f');
+        ctx.fillStyle = gradInner;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Swirl center highlight
+        ctx.strokeStyle = 'rgba(255, 204, 213, 0.8)';
+        ctx.lineWidth = Math.max(1.2, s * 0.1);
+        ctx.beginPath();
+        ctx.arc(0, 0, s * 0.25, 0.5, Math.PI * 1.6);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // When rose passes the bottom of viewport, mark done
+        if (r.y > this.canvas.height + 70) {
+          r.done = true;
+        }
+      }
+
+      // When all roses have fallen off screen, cleanly finish and hide canvas
+      if (activeCount > 0) {
+        requestAnimationFrame(this.animate);
+      } else {
+        this.running = false;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.canvas.style.display = 'none';
+      }
+    }
+  }
+
+  // ================================================================
   // 4. CONTENT POPULATION
   // ================================================================
   function populateContent() {
@@ -1225,6 +1471,7 @@
   // 7. SCRAPBOOK PRESENTATION & SCROLL EFFECTS
   // ================================================================
   let scrapbookParticleEngine = null;
+  let oneTimeRoseEngine = null;
 
   function showScrapbook() {
     scrapbook.style.display = 'block';
@@ -1234,6 +1481,12 @@
     setTimeout(function() {
       scrapbook.classList.add('scrapbook--visible');
     }, 100);
+
+    // Trigger one-time celebratory rose shower (35-40 roses falling down once upon transition)
+    const roseCanvas = document.getElementById('oneTimeRoseCanvas');
+    if (roseCanvas) {
+      oneTimeRoseEngine = new OneTimeRoseShowerEngine(roseCanvas);
+    }
 
     // Initialize subtle falling particles on scrapbook
     if (!scrapbookParticleEngine) {

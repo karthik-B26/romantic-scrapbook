@@ -115,6 +115,31 @@ img { max-width: 100%; display: block; }
   50% { transform: translateY(5px); }
 }
 
+/* Rhythmic Clock Pendulum Swings for Scrapbook Emojis & Stickers */
+@keyframes pendulumSwing1 {
+  0% { transform: rotate(-9deg); }
+  50% { transform: rotate(9deg); }
+  100% { transform: rotate(-9deg); }
+}
+
+@keyframes pendulumSwing2 {
+  0% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  100% { transform: rotate(10deg); }
+}
+
+@keyframes pendulumSwing3 {
+  0% { transform: rotate(-7.5deg) translateY(-2px); }
+  50% { transform: rotate(7.5deg) translateY(2px); }
+  100% { transform: rotate(-7.5deg) translateY(-2px); }
+}
+
+@keyframes pendulumSwingSlow {
+  0% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+  100% { transform: rotate(-8deg); }
+}
+
 @keyframes gentleTilt1 {
   0%, 100% { transform: rotate(-2.5deg) translateY(0); }
   50% { transform: rotate(1.5deg) translateY(-6px); }
@@ -643,17 +668,159 @@ img { max-width: 100%; display: block; }
   opacity: 1;
 }
 
-/* ── Hero Section ── */
+/* ── Hero Section Enhanced Handcrafted Details ── */
 .hero {
-  min-height: 80vh;
+  min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 80px 20px 40px;
+  padding: 90px 24px 50px;
   position: relative;
   overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, rgba(255, 232, 238, 0.6) 0%, rgba(250, 243, 232, 0) 72%);
+}
+
+.hero__content-wrap {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 680px;
+}
+
+.washi-tape--hero-top {
+  position: relative;
+  width: 140px;
+  height: 24px;
+  margin-bottom: 20px;
+  transform: rotate(-1.5deg);
+}
+
+.hero__accent {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+  animation: fadeSlideUp 1s var(--ease-out-soft) 0.5s both;
+}
+
+.hero__accent--top-left {
+  top: 40px;
+  left: 6%;
+  transform: rotate(-5deg);
+}
+
+.hero__accent--top-right {
+  top: 45px;
+  right: 6%;
+  transform: rotate(4deg);
+}
+
+.hero__accent--bottom-left {
+  bottom: 30px;
+  left: 8%;
+  transform: rotate(-3deg);
+}
+
+.hero__accent--bottom-right {
+  bottom: 35px;
+  right: 8%;
+  transform: rotate(3deg);
+}
+
+.hero__sticker-bow {
+  font-size: 2.8rem;
+  filter: drop-shadow(0 6px 12px rgba(74, 54, 40, 0.18));
+  transform-origin: 50% 0;
+  animation: pendulumSwing1 3.6s ease-in-out infinite;
+}
+
+.hero__sticker-flower {
+  font-size: 2.6rem;
+  filter: drop-shadow(0 6px 12px rgba(74, 54, 40, 0.18));
+  transform-origin: 50% 0;
+  animation: pendulumSwing2 4.0s ease-in-out infinite 0.5s;
+}
+
+.hero__sticker-star {
+  font-size: 2.4rem;
+  filter: drop-shadow(0 6px 12px rgba(74, 54, 40, 0.18));
+  transform-origin: 50% 0;
+  animation: pendulumSwing3 3.2s ease-in-out infinite 0.3s;
+}
+
+.hero__stamp {
+  margin-top: 6px;
+  padding: 4px 10px;
+  border: 1.5px dashed var(--seal-maroon);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 4px 10px rgba(58, 30, 20, 0.08);
+}
+.hero__stamp-inner {
+  font-family: var(--font-hand);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--seal-maroon);
+  text-transform: uppercase;
+}
+
+.hero__mini-tag {
+  margin-top: 6px;
+  padding: 4px 12px;
+  background: #f9d8de;
+  border-radius: 3px;
+  font-family: var(--font-hand);
+  font-size: 0.8rem;
+  color: var(--rose-primary);
+  box-shadow: 0 4px 10px rgba(58, 30, 20, 0.08);
+}
+
+.hero__sticky-note {
+  background: #fef4e8;
+  border: 1px solid rgba(201, 151, 59, 0.25);
+  border-radius: 6px;
+  padding: 10px 14px;
+  box-shadow: 0 6px 16px rgba(58, 30, 20, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero__sticky-note span {
+  font-family: var(--font-accent-script);
+  font-size: 1.25rem;
+  color: var(--rose-primary);
+}
+.hero__sticky-note small {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.hero__sparkle-badge {
+  margin-top: 6px;
+  padding: 4px 12px;
+  background: rgba(253, 251, 247, 0.9);
+  border: 1px solid rgba(232, 194, 122, 0.5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-accent-script);
+  font-size: 1.1rem;
+  color: var(--gold-600);
+  box-shadow: 0 4px 10px rgba(58, 30, 20, 0.08);
+}
+
+@media (max-width: 768px) {
+  .hero__accent--top-left { top: 20px; left: 2%; transform: scale(0.85) rotate(-5deg); }
+  .hero__accent--top-right { top: 25px; right: 2%; transform: scale(0.85) rotate(4deg); }
+  .hero__accent--bottom-left, .hero__accent--bottom-right { display: none; }
 }
 
 .hero__label {
@@ -905,38 +1072,43 @@ img { max-width: 100%; display: block; }
 }
 
 /* ================================================================
-   6. FLOATING & TILTING STICKERS
+   6. FLOATING & PENDULUM SWINGING STICKERS
    ================================================================ */
 .sticker-card {
   text-align: center;
-  padding: 12px 0;
+  padding: 14px 0;
   cursor: default;
   user-select: none;
 }
 
 .sticker-wrap {
   display: inline-block;
-  font-size: 2.5rem;
+  font-size: 2.6rem;
   filter: drop-shadow(0 6px 12px rgba(74, 54, 40, 0.16));
-  transition: transform 0.3s ease;
+  transform-origin: 50% -8px; /* Clock pendulum pivot point */
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 .sticker-wrap:hover {
-  transform: scale(1.22) rotate(6deg) !important;
+  filter: drop-shadow(0 8px 18px rgba(74, 54, 40, 0.28)) !important;
 }
 
-/* Staggered organic sticker animations */
-.sticker--bear .sticker-wrap { animation: gentleTilt1 7.5s ease-in-out infinite; }
-.sticker--bow .sticker-wrap { animation: gentleFloatSlow 9s ease-in-out infinite 0.5s; }
-.sticker--kiss .sticker-wrap { animation: gentleWiggle 6s ease-in-out infinite 1s; }
-.sticker--rainbow .sticker-wrap { animation: gentleTilt2 11s ease-in-out infinite 0.3s; }
-.sticker--heart .sticker-wrap { animation: pulseHeart 3s ease-in-out infinite 0.8s; }
-.sticker--music .sticker-wrap { animation: gentleFloatSlow 8s ease-in-out infinite 1.2s; }
-.sticker--ghosts .sticker-wrap { animation: gentleWiggle 9s ease-in-out infinite 0.6s; font-size: 2rem; }
-.sticker--star .sticker-wrap { animation: gentleTilt1 8.5s ease-in-out infinite 1.5s; }
-.sticker--letter .sticker-wrap { animation: gentleFloatSlow 10s ease-in-out infinite 0.2s; }
-.sticker--evileye .sticker-wrap { animation: gentleTilt2 7s ease-in-out infinite 1s; }
-.sticker--butterfly .sticker-wrap { animation: gentleFloatSlow 6.5s ease-in-out infinite 0.4s; }
-.sticker--berry .sticker-wrap { animation: gentleWiggle 8s ease-in-out infinite 0.7s; }
+/* Staggered rhythmic clock pendulum swings */
+.sticker--bear .sticker-wrap { animation: pendulumSwing1 3.4s ease-in-out infinite; }
+.sticker--bow .sticker-wrap { animation: pendulumSwing2 3.8s ease-in-out infinite 0.4s; }
+.sticker--kiss .sticker-wrap { animation: pendulumSwing3 3.0s ease-in-out infinite 0.8s; }
+.sticker--rainbow .sticker-wrap { animation: pendulumSwingSlow 4.5s ease-in-out infinite 0.2s; }
+.sticker--heart .sticker-wrap { animation: pendulumSwing1 3.2s ease-in-out infinite 0.6s; }
+.sticker--music .sticker-wrap { animation: pendulumSwing2 3.6s ease-in-out infinite 1.0s; }
+.sticker--ghosts .sticker-wrap { animation: pendulumSwing3 4.0s ease-in-out infinite 0.5s; font-size: 2.1rem; }
+.sticker--star .sticker-wrap { animation: pendulumSwingSlow 3.5s ease-in-out infinite 1.2s; }
+.sticker--letter .sticker-wrap { animation: pendulumSwing1 4.2s ease-in-out infinite 0.3s; }
+.sticker--evileye .sticker-wrap { animation: pendulumSwing2 3.3s ease-in-out infinite 0.7s; }
+.sticker--butterfly .sticker-wrap { animation: pendulumSwing3 3.7s ease-in-out infinite 0.9s; }
+.sticker--berry .sticker-wrap { animation: pendulumSwingSlow 3.1s ease-in-out infinite 0.4s; }
+.sticker--cherry .sticker-wrap { animation: pendulumSwing1 3.5s ease-in-out infinite 0.5s; }
+.sticker--blossom .sticker-wrap { animation: pendulumSwing2 4.1s ease-in-out infinite 0.8s; }
+.sticker--sparkheart .sticker-wrap { animation: pendulumSwing3 3.3s ease-in-out infinite 0.2s; }
+.sticker--sparkles .sticker-wrap { animation: pendulumSwingSlow 3.6s ease-in-out infinite 0.6s; }
 
 /* Badges row */
 .badges-row {
@@ -1151,6 +1323,17 @@ img { max-width: 100%; display: block; }
 .music-control.muted .music-control__label {
   color: var(--ink-soft);
   opacity: 0.7;
+}
+
+/* ================================================================
+   ONE-TIME CELEBRATORY ROSE SHOWER CANVAS
+   ================================================================ */
+.one-time-rose-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: none;
 }
 
 /* ================================================================

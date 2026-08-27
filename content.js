@@ -31,7 +31,12 @@ var _defaultContent = {
     { url: '', caption: 'silly face' },
     { url: '', caption: 'golden hour' },
     { url: '', caption: 'cozy nights' },
-    { url: '', caption: 'my whole heart' }
+    { url: '', caption: 'my whole heart' },
+    { url: '', caption: 'sweet memories' },
+    { url: '', caption: 'laughter & smiles' },
+    { url: '', caption: 'adventures with you' },
+    { url: '', caption: 'my sunshine' },
+    { url: '', caption: "here's to forever" }
   ],
   finaleLabel: 'To many more',
   finaleHeadline: 'Happy Birthday, my love',
